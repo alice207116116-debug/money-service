@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>월여유 - 로그인</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Pretendard', sans-serif; background: #e8efee; }
+    button { font-family: inherit; border: 0; cursor: pointer; }
+
+    .page { position: relative; min-height: 100vh; overflow: hidden; display: flex; flex-direction: column;
+            padding: 40px clamp(24px, 7vw, 110px) 40px; }
+
+    /* 배경 동그라미 */
+    .circle { position: absolute; border-radius: 50%; z-index: 0; }
+    .circle.top    { width: 360px; height: 360px; top: -140px; right: -4vw; background: #8ab8b3; }
+    .circle.bottom { width: 360px; height: 360px; left: -100px; bottom: -110px; background: #b9d4d0; }
+
+    /* 로고 (왼쪽 위) */
+    .logo { position: relative; z-index: 1; display: flex; align-items: center; gap: 8px; align-self: flex-start;
+            font-size: 26px; font-weight: 720; color: #1f6f6a; text-decoration: none; }
+    .logo-dots { position: relative; width: 24px; height: 32px; }
+    .logo-dots i { position: absolute; left: 2px; width: 22px; height: 22px; border-radius: 50%; }
+    .logo-dots i:nth-child(1) { top: 0px;    background: #9de5e2; }
+    .logo-dots i:nth-child(2) { top: 6px;  background: #75c8c1; }
+    .logo-dots i:nth-child(3) { top: 12px; background: #5eaaa3; }
+
+    /* 가운데 가로줄: 왼쪽 글, 오른쪽 그림 */
+    .row { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between;
+           gap: 40px; margin: auto 0; padding: 40px 0; }
+
+    .title { font-size: clamp(32px, 4vw, 52px); line-height: 1.35; font-weight: 700; color: #3a3a3a; letter-spacing: -1px; }
+    .desc  { margin-top: 16px; font-size: 15px; line-height: 1.6; color: #666; }
+
+    /* 카드 + 막대 그래프 */
+    .art { display: flex; align-items: flex-end; gap: 14px; flex-shrink: 0; }
+    .art svg { width: 200px; height: 140px; margin-right: 6px; }
+    .bar { width: 58px; border-radius: 12px; }
+    .bar.b1 { height: 47px;  background: #dbe6e3; }
+    .bar.b2 { height: 86px;  background: #7ab5ab; }
+    .bar.b3 { height: 130px; background: #23807b; }
+
+    /* 하단 로그인 영역 (가운데) */
+    .login { position: relative; z-index: 1; width: 360px; max-width: 100%; margin: 0 auto; }
+    .hint  { margin-bottom: 8px; font-size: 12px; font-weight: 600; color: #222; }
+
+    .sns { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 54px;
+           border-radius: 8px; font-size: 16px; font-weight: 700; }
+    .kakao { background: #fae100; color: #3b1e1e; }
+    .apple { margin-top: 12px; background: #000; color: #fff; }
+    .sns svg { width: 20px; height: 20px; }
+
+    .note  { margin-top: 28px; text-align: center; font-size: 12px; color: #777; }
+    .terms { margin-top: 16px; text-align: center; font-size: 11px; color: #777; }
+
+    /* 모바일 */
+    @media (max-width: 768px) {
+      .row { flex-direction: column; align-items: flex-start; gap: 32px; }
+      .art { align-self: center; }
+      .circle.top { width: 200px; height: 200px; top: -100px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <span class="circle top"></span>
+    <span class="circle bottom"></span>
+
+    <a href="./index.html" class="logo">
+      <span class="logo-dots"><i></i><i></i><i></i></span>
+      월여유
+    </a>
+
+    <div class="row">
+      <div>
+        <h2 class="title">이번 달의 여유를<br>숫자로 확인하세요.</h2>
+        <p class="desc">수입과 정기지출을 정리하면<br>자유롭게 쓸 수 있는 금액이 보여요.</p>
+      </div>
+
+      <div class="art">
+        <svg viewBox="0 0 100 70" fill="none">
+          <rect x="4" y="4" width="92" height="62" rx="11" stroke="#23807b" stroke-width="8"/>
+          <rect x="0" y="22" width="100" height="9" fill="#23807b"/>
+          <circle cx="76" cy="49" r="4.5" fill="#23807b"/>
+          <rect x="20" y="45" width="40" height="8" fill="#23807b" rx="4"/>
+        </svg>
+        <div class="bar b1"></div>
+        <div class="bar b2"></div>
+        <div class="bar b3"></div>
+      </div>
+    </div>
+
+    <div class="login">
+      <p class="hint">간편하게 시작하기</p>
+
+      <button type="button" class="sns kakao" id="kakaoBtn">
+        <svg viewBox="0 0 24 24"><path fill="#3b1e1e" d="M12 3C6.48 3 2 6.58 2 11c0 2.84 1.87 5.33 4.69 6.75l-.95 3.5c-.08.3.26.54.52.37l4.17-2.77c.18.01.37.02.57.02 5.52 0 10-3.58 10-8S17.52 3 12 3z"/></svg>
+        카카오톡으로 계속하기
+      </button>
+
+      <button type="button" class="sns apple" id="appleBtn">
+        <svg viewBox="0 0 24 24" fill="#fff"><path d="M16.365 1.43c0 1.14-.493 2.27-1.177 3.08-.744.9-1.99 1.57-2.987 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.22-.04-.39 0-1.15.572-2.27 1.206-2.98.804-.94 2.142-1.64 3.248-1.68.03.13.05.28.05.43zm4.565 15.71c-.03.07-.463 1.58-1.518 3.12-.945 1.34-1.94 2.71-3.43 2.71-1.517 0-1.9-.88-3.63-.88-1.698 0-2.302.91-3.67.91-1.377 0-2.332-1.26-3.428-2.8-1.287-1.82-2.323-4.63-2.323-7.28 0-4.28 2.797-6.55 5.552-6.55 1.448 0 2.675.95 3.6.95.865 0 2.222-1.01 3.902-1.01.613 0 2.886.06 4.374 2.19-.13.09-2.383 1.37-2.383 4.19 0 3.26 2.854 4.42 2.955 4.45z"/></svg>
+        Apple로 계속하기
+      </button>
+
+      <p class="note">로그인하면 다음에도 자동으로 이어서 볼 수 있어요.</p>
+      <p class="terms">계속하면 서비스 이용약관 및 개인정보 처리방침에 동의하게 됩니다.</p>
+    </div>
+  </div>
+
+  <!-- 카카오 SDK (버전은 카카오 개발자 사이트 다운로드 페이지의 최신 버전으로 바꾸세요) -->
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.1/kakao.min.js" crossorigin="anonymous"></script>
+<!-- 애플 로그인 SDK -->
+<script src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
+
+<script>
+  // ===== 카카오 =====
+  var KAKAO_JS_KEY  = '여기에_카카오_JavaScript_키';
+  var KAKAO_REDIRECT = 'https://내도메인.com/kakao-callback.html';  // 카카오 개발자 사이트에 등록한 주소와 똑같이
+
+  if (!Kakao.isInitialized()) Kakao.init(KAKAO_JS_KEY);
+
+  document.getElementById('kakaoBtn').addEventListener('click', function () {
+    Kakao.Auth.authorize({
+      redirectUri: KAKAO_REDIRECT
+    });
+  });
+
+  // ===== 애플 =====
+  AppleID.auth.init({
+    clientId:    'com.내도메인.서비스ID',                 // Apple의 Services ID
+    scope:       'name email',
+    redirectURI: 'https://내도메인.com/apple-callback',   // Apple에 등록한 주소와 똑같이
+    state:       'login',
+    usePopup:    true                                     // 팝업으로 로그인창 띄우기
+  });
+
+  document.getElementById('appleBtn').addEventListener('click', function () {
+    AppleID.auth.signIn()
+      .then(function (res) {
+        // res.authorization.code, res.authorization.id_token 을 서버로 보내서 검증
+        console.log(res);
+      })
+      .catch(function (err) {
+        console.log('애플 로그인 취소 또는 실패', err);
+      });
+  });
+</script>
+</body>
+</html>

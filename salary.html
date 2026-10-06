@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>월급 관리</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <style>
+    :root {
+      --green: #4a968c;
+      --green-dark: #2e7d72;
+      --green-mid: #88b8bb;
+      --teal: #0f8a84;
+      --bg: #f4f4f4;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Pretendard', sans-serif; background: var(--bg); color: #222; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ===== 상단 바 (대시보드와 동일) ===== */
+    .nav { display: flex; align-items: center; height: 52px; padding: 0 38px; background: var(--green); color: #fff; }
+    .nav-title { font-size: 15px; font-weight: 700; margin-right: 40px; }
+    .nav-menu { display: flex; gap: 6px; flex: 1; }
+    .nav-menu a { padding: 7px 12px; border-radius: 6px; font-size: 12px; color: rgba(255,255,255,.85); }
+    .nav-menu a.active { background: rgba(255,255,255,.6); color: #fff; }
+    .nav-user { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+    .avatar { display: flex; align-items: center; justify-content: center; width: 26px; height: 26px;
+              border-radius: 50%; background: #b8d6d1; color: #3d7f75; font-size: 11px; }
+
+    /* ===== 본문 ===== */
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 70px 32px 80px; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
+
+    .card { background: #fff; border: 1px solid #e6e6e6; border-radius: 28px; padding: 32px 36px; }
+    .card h2 { font-size: 20px; font-weight: 700; }
+    .card-head { display: flex; align-items: center; justify-content: space-between; }
+    .more { font-size: 14px; color: #222; }
+
+    /* 지출 현황 */
+    .spend { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 28px; }
+    .donut { position: relative; width: 240px; height: 240px; flex-shrink: 0; }
+    .donut svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .donut circle { fill: none; stroke-width: 26; }
+    .donut-center { position: absolute; inset: 0; display: flex; flex-direction: column;
+                    align-items: center; justify-content: center; font-size: 13px; }
+    .donut-center b { margin-top: 4px; font-size: 15px; }
+
+    .legend { list-style: none; flex: 1; }
+    .legend li { display: flex; align-items: center; gap: 10px; padding: 12px 0; font-size: 15px; }
+    .legend .dot { width: 11px; height: 11px; border-radius: 50%; }
+    .legend .name { flex: 1; }
+    .legend .money { font-weight: 500; }
+
+    /* 최근 거래 내역 */
+    .tx { list-style: none; margin-top: 22px; padding: 0 14px; }
+    .tx li { display: flex; align-items: center; gap: 14px; padding: 15px 0; font-size: 16px; }
+    .tx .ico { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px;
+               border-radius: 50%; background: #d4ecea; }
+    .tx .ico svg { width: 22px; height: 22px; stroke: var(--teal); fill: none; stroke-width: 2;
+                   stroke-linecap: round; stroke-linejoin: round; }
+    .tx .name { flex: 1; }
+    .tx .money { font-weight: 600; }
+
+    /* 이번 달 목표 */
+    .goal { display: flex; align-items: flex-start; gap: 18px; margin-top: 22px; }
+    .goal-ico { width: 44px; height: 44px; flex-shrink: 0; }
+    .goal-body { flex: 1; }
+    .goal-title { font-size: 16px; }
+    .goal-sub { margin-top: 4px; font-size: 16px; }
+    .goal-bar { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+    .bar { flex: 1; height: 14px; border-radius: 7px; background: #e6ebeb; overflow: hidden; }
+    .bar i { display: block; height: 100%; width: 39.5%; border-radius: 7px; background: var(--teal); }
+    .percent { font-size: 14px; color: #555; }
+    .manage { padding: 6px 10px; border: 1px solid var(--green); border-radius: 4px; background: #fff;
+              color: var(--green-dark); font-size: 13px; }
+
+    /* 자산 현황 */
+    .asset { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-top: 24px; }
+    .asset-label { font-size: 16px; color: #444; }
+    .asset-total { margin-top: 3px; font-size: 32px; font-weight: 800; color: var(--green-dark); letter-spacing: -1px; }
+    .asset svg { width: 220px; height: 80px; }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- 상단 바 -->
+  <header class="nav">
+    <div class="nav-title">이번 달 월급 관리</div>
+    <nav class="nav-menu">
+      <a href="./dashboard.html">대시보드</a>
+      <a href="./salary.html" class="active">월급 관리</a>
+      <a href="#">고객 상담</a>
+      <a href="#">설정</a>
+    </nav>
+    <div class="nav-user">
+      <span class="avatar"></span>
+      <span>ooo 고객님</span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="grid">
+
+      <!-- 지출 현황 -->
+      <section class="card">
+        <h2>지출 현황</h2>
+        <div class="spend">
+          <div class="donut">
+            <!-- 둘레 = 2πr = 377 (r=60). 교통비 48 / 기타 87 / 월세 242 -->
+            <svg viewBox="0 0 160 160">
+              <circle cx="80" cy="80" r="60" stroke="#4a968c" stroke-dasharray="48.3 377" stroke-dashoffset="0"/>
+              <circle cx="80" cy="80" r="60" stroke="#d9d9d9" stroke-dasharray="87.1 377" stroke-dashoffset="-48.3"/>
+              <circle cx="80" cy="80" r="60" stroke="#88b8bb" stroke-dasharray="241.6 377" stroke-dashoffset="-135.4"/>
+            </svg>
+            <div class="donut-center">총 지출<b>780,000원</b></div>
+          </div>
+
+          <ul class="legend">
+            <li><span class="dot" style="background:#88b8bb"></span><span class="name">월세</span><span class="money">500,000원</span></li>
+            <li><span class="dot" style="background:#4a968c"></span><span class="name">교통비</span><span class="money">100,000원</span></li>
+            <li><span class="dot" style="background:#d9d9d9"></span><span class="name">기타</span><span class="money">180,000원</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 최근 거래 내역 -->
+      <section class="card">
+        <div class="card-head">
+          <h2>최근 거래 내역</h2>
+          <a href="#" class="more">더 보기 ▾</a>
+        </div>
+        <ul class="tx">
+          <li>
+            <span class="ico"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M8 21v-3M16 21v-3"/></svg></span>
+            <span class="name">버스</span><span class="money">1,250원</span>
+          </li>
+          <li>
+            <span class="ico"><svg viewBox="0 0 24 24"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 2-2 6 0 8v10"/></svg></span>
+            <span class="name">스타벅스</span><span class="money">4,800원</span>
+          </li>
+          <li>
+            <span class="ico"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8a3 3 0 0 1 6 0M9.500 14l2 2 3-3.500"/></svg></span>
+            <span class="name">무신사</span><span class="money">51,000원</span>
+          </li>
+          <li>
+            <span class="ico"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/></svg></span>
+            <span class="name">기타</span><span class="money">4,500원</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- 이번 달 목표 -->
+      <section class="card">
+        <h2>이번 달 목표</h2>
+        <div class="goal">
+          <svg class="goal-ico" viewBox="0 0 48 48" fill="none" stroke="#0f8a84" stroke-width="5" stroke-linecap="round">
+            <circle cx="22" cy="26" r="16"/>
+            <circle cx="22" cy="26" r="8"/>
+            <path d="M22 26L40 8M34 8h6v6"/>
+          </svg>
+          <div class="goal-body">
+            <p class="goal-title">저축 목표</p>
+            <p class="goal-sub">1,520,000원 중 600,000원 달성</p>
+            <div class="goal-bar">
+              <div class="bar"><i></i></div>
+              <span class="percent">39.5%</span>
+              <button type="button" class="manage">목표 관리</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 자산 현황 -->
+      <section class="card">
+        <h2>자산 현황</h2>
+        <div class="asset">
+          <div>
+            <p class="asset-label">총 자산</p>
+            <p class="asset-total">15,500,000원</p>
+          </div>
+
+          <svg viewBox="0 0 220 80" fill="none">
+            <defs>
+              <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#2aa59b" stop-opacity=".45"/>
+                <stop offset="1" stop-color="#2aa59b" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M2 70 L32 62 L62 60 L82 46 L102 52 L122 42 L142 48 L162 28 L182 16 L182 80 L2 80 Z" fill="url(#fill)"/>
+            <polyline points="2,70 32,62 62,60 82,46 102,52 122,42 142,48 162,28 182,16"
+                      stroke="#1a9d93" stroke-width="2" stroke-linejoin="round"/>
+            <g fill="#fff" stroke="#1a9d93" stroke-width="2">
+              <circle cx="2" cy="70" r="3"/><circle cx="32" cy="62" r="3"/><circle cx="62" cy="60" r="3"/>
+              <circle cx="82" cy="46" r="3"/><circle cx="102" cy="52" r="3"/><circle cx="122" cy="42" r="3"/>
+              <circle cx="142" cy="48" r="3"/><circle cx="162" cy="28" r="3"/><circle cx="182" cy="16" r="3"/>
+            </g>
+          </svg>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+</body>
+</html>
