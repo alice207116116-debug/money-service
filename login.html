@@ -3,151 +3,234 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>월여유 - 로그인</title>
+  <title>로그인 | 월여유</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <style>
+    :root {
+      --green: #4a968c;
+      --green-dark: #2e7d72;
+      --green-mid: #88b8bb;
+      --green-light: #dce8e5;
+      --bg: #f4f4f4;
+      --line: #e3e6e5;
+      --red: #d4574a;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Pretendard', sans-serif; background: #e8efee; }
-    button { font-family: inherit; border: 0; cursor: pointer; }
+    html, body { height: 100%; }
+    body { font-family: 'Pretendard', sans-serif; background: #fff; color: #141414; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; }
 
-    .page { position: relative; min-height: 100vh; overflow: hidden; display: flex; flex-direction: column;
-            padding: 40px clamp(24px, 7vw, 110px) 40px; }
+    .page { min-height: 100%; background: #f6f8f7; }
 
-    /* 배경 동그라미 */
-    .circle { position: absolute; border-radius: 50%; z-index: 0; }
-    .circle.top    { width: 360px; height: 360px; top: -140px; right: -4vw; background: #8ab8b3; }
-    .circle.bottom { width: 360px; height: 360px; left: -100px; bottom: -110px; background: #b9d4d0; }
+    /* ===== 로그인 ===== */
+    .side { display: flex; flex-direction: column; min-height: 100vh; padding: 32px 48px; }
+    .side-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; color: #888; }
+    .side-top a { font-weight: 700; color: var(--green-dark); }
+    .side-top a.m-logo { color: #141414; }
+    .form-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 0; }
+    .form { width: 100%; max-width: 440px; padding: 44px 40px 40px; background: #fff; border-radius: 28px;
+            box-shadow: 0 1px 2px rgba(0,0,0,.03), 0 24px 56px -20px rgba(20,60,55,.18); }
+    .form-logo { margin-bottom: 22px; }
+    .badge.lg svg { width: 20px; height: 48px; }
+    .form h2 { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
+    .form .sub { margin-top: 10px; font-size: 16px; color: #888; }
 
-    /* 로고 (왼쪽 위) */
-    .logo { position: relative; z-index: 1; display: flex; align-items: center; gap: 8px; align-self: flex-start;
-            font-size: 26px; font-weight: 720; color: #1f6f6a; text-decoration: none; }
-    .logo-dots { position: relative; width: 24px; height: 32px; }
-    .logo-dots i { position: absolute; left: 2px; width: 22px; height: 22px; border-radius: 50%; }
-    .logo-dots i:nth-child(1) { top: 0px;    background: #9de5e2; }
-    .logo-dots i:nth-child(2) { top: 6px;  background: #75c8c1; }
-    .logo-dots i:nth-child(3) { top: 12px; background: #5eaaa3; }
+    .field { margin-top: 28px; }
+    .field + .field { margin-top: 18px; }
+    .field label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: #444; }
+    .input { position: relative; }
+    .input input { width: 100%; height: 56px; padding: 0 18px; border: 1.5px solid var(--line); border-radius: 14px;
+                   background: #fff; font: inherit; font-size: 16px; color: #141414; outline: 0;
+                   transition: border-color .2s ease, box-shadow .2s ease; }
+    .input input::placeholder { color: #b5b5b5; }
+    .input input:focus { border-color: var(--green-dark); box-shadow: 0 0 0 4px rgba(46,125,114,.12); }
+    .field.error input { border-color: var(--red); box-shadow: 0 0 0 4px rgba(212,87,74,.1); }
+    .msg { display: none; margin-top: 8px; font-size: 13px; color: var(--red); }
+    .field.error .msg { display: block; }
+    .eye { position: absolute; top: 50%; right: 10px; transform: translateY(-50%); display: flex; align-items: center; justify-content: center;
+           width: 38px; height: 38px; border: 0; border-radius: 10px; background: none; color: #999; }
+    .eye:hover { background: #f3f5f4; color: var(--green-dark); }
+    .eye svg { width: 20px; height: 20px; }
+    .eye .off { display: none; }
+    .eye.on .on { display: none; }
+    .eye.on .off { display: block; }
 
-    /* 가운데 가로줄: 왼쪽 글, 오른쪽 그림 */
-    .row { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between;
-           gap: 40px; margin: auto 0; padding: 40px 0; }
+    .row { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; font-size: 14px; }
+    .check { display: inline-flex; align-items: center; gap: 8px; color: #555; cursor: pointer; user-select: none; }
+    .check input { width: 18px; height: 18px; accent-color: var(--green-dark); }
+    .row a { color: #888; }
+    .row a:hover { color: var(--green-dark); }
 
-    .title { font-size: clamp(32px, 4vw, 52px); line-height: 1.35; font-weight: 700; color: #3a3a3a; letter-spacing: -1px; }
-    .desc  { margin-top: 16px; font-size: 15px; line-height: 1.6; color: #666; }
+    .submit { position: relative; width: 100%; height: 58px; margin-top: 28px; border: 0; border-radius: 14px;
+              background: #141414; color: #fff; font-size: 17px; font-weight: 700; transition: background .25s ease, transform .2s ease; }
+    .submit:hover { background: var(--green-dark); }
+    .submit:active { transform: scale(.99); }
+    .submit.loading { color: transparent; pointer-events: none; background: var(--green-dark); }
+    .submit.loading::after { content: ""; position: absolute; top: 50%; left: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px;
+                             border: 2.5px solid rgba(255,255,255,.35); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* 카드 + 막대 그래프 */
-    .art { display: flex; align-items: flex-end; gap: 14px; flex-shrink: 0; }
-    .art svg { width: 200px; height: 140px; margin-right: 6px; }
-    .bar { width: 58px; border-radius: 12px; }
-    .bar.b1 { height: 47px;  background: #dbe6e3; }
-    .bar.b2 { height: 86px;  background: #7ab5ab; }
-    .bar.b3 { height: 130px; background: #23807b; }
+    .or { display: flex; align-items: center; gap: 14px; margin: 30px 0 18px; font-size: 13px; color: #aaa; }
+    .or::before, .or::after { content: ""; flex: 1; height: 1px; background: #ececec; }
+    .social { display: grid; gap: 10px; }
+    .social button { display: flex; align-items: center; justify-content: center; gap: 10px; height: 52px; border-radius: 14px; font-size: 15px; font-weight: 600; transition: filter .2s ease, border-color .2s ease; }
+    .social .kakao { border: 0; background: #fee500; color: #191919; }
+    .social .naver { border: 0; background: #03c75a; color: #fff; }
+    .social .apple { border: 1.5px solid var(--line); background: #fff; color: #141414; }
+    .social button:hover { filter: brightness(.96); }
+    .social .sns { width: 20px; height: 20px; object-fit: contain; }
+    .social .apple:hover { border-color: #c9cfcd; filter: none; }
 
-    /* 하단 로그인 영역 (가운데) */
-    .login { position: relative; z-index: 1; width: 360px; max-width: 100%; margin: 0 auto; }
-    .hint  { margin-bottom: 8px; font-size: 12px; font-weight: 600; color: #222; }
+    .foot { text-align: center; font-size: 12px; color: #aaa; }
+    .foot a { text-decoration: underline; }
 
-    .sns { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 54px;
-           border-radius: 8px; font-size: 16px; font-weight: 700; }
-    .kakao { background: #fae100; color: #3b1e1e; }
-    .apple { margin-top: 12px; background: #000; color: #fff; }
-    .sns svg { width: 20px; height: 20px; }
+    /* 등장 애니메이션 */
+    .up { opacity: 0; transform: translateY(14px); animation: up .7s cubic-bezier(.2,.7,.2,1) forwards; }
+    @keyframes up { to { opacity: 1; transform: none; } }
 
-    .note  { margin-top: 28px; text-align: center; font-size: 12px; color: #777; }
-    .terms { margin-top: 16px; text-align: center; font-size: 11px; color: #777; }
+    @media (prefers-reduced-motion: reduce) {
+      .up { animation: none; opacity: 1; transform: none; }
+      .submit, .input input, .social button { transition: none; }
+    }
 
-    /* 모바일 */
-    @media (max-width: 768px) {
-      .row { flex-direction: column; align-items: flex-start; gap: 32px; }
-      .art { align-self: center; }
-      .circle.top { width: 200px; height: 200px; top: -100px; }
+    /* 로고 */
+    .m-logo { display: inline-flex; align-items: center; gap: 9px; font-size: 20px; font-weight: 800; letter-spacing: -.5px; color: #141414; }
+    .badge { display: flex; align-items: center; }
+    .badge svg { width: 13px; height: 32px; }
+
+    @media (max-width: 600px) {
+      .side { padding: 20px 16px; }
+      .page { background: #fff; }
+      .form { padding: 8px 4px 24px; box-shadow: none; border-radius: 0; }
+    }
+    @media (max-width: 480px) {
+      .form h2 { font-size: 28px; }
+      .side-top .ask { display: none; }
     }
   </style>
 </head>
 
 <body>
   <div class="page">
-    <span class="circle top"></span>
-    <span class="circle bottom"></span>
 
-    <a href="./index.html" class="logo">
-      <span class="logo-dots"><i></i><i></i><i></i></span>
-      월여유
-    </a>
-
-    <div class="row">
-      <div>
-        <h2 class="title">이번 달의 여유를<br>숫자로 확인하세요.</h2>
-        <p class="desc">수입과 정기지출을 정리하면<br>자유롭게 쓸 수 있는 금액이 보여요.</p>
+    <!-- 로그인 -->
+    <main class="side">
+      <div class="side-top">
+        <a href="./about.html" class="m-logo">
+          <span class="badge"><svg viewBox="0 0 14 34" aria-hidden="true"><circle cx="7" cy="7" r="7" fill="#c4e3dd"/><circle cx="7" cy="17" r="7" fill="#6fb3aa"/><circle cx="7" cy="27" r="7" fill="#2e7d72"/></svg></span>
+          <span>월여유</span>
+        </a>
+        <span><span class="ask">처음이신가요?</span> <a href="#">회원가입</a></span>
       </div>
 
-      <div class="art">
-        <svg viewBox="0 0 100 70" fill="none">
-          <rect x="4" y="4" width="92" height="62" rx="11" stroke="#23807b" stroke-width="8"/>
-          <rect x="0" y="22" width="100" height="9" fill="#23807b"/>
-          <circle cx="76" cy="49" r="4.5" fill="#23807b"/>
-          <rect x="20" y="45" width="40" height="8" fill="#23807b" rx="4"/>
-        </svg>
-        <div class="bar b1"></div>
-        <div class="bar b2"></div>
-        <div class="bar b3"></div>
+      <div class="form-wrap">
+        <form class="form" id="loginForm" novalidate>
+          <div class="form-logo up" style="animation-delay:.05s"><span class="badge lg"><svg viewBox="0 0 14 34" aria-hidden="true"><circle cx="7" cy="7" r="7" fill="#c4e3dd"/><circle cx="7" cy="17" r="7" fill="#6fb3aa"/><circle cx="7" cy="27" r="7" fill="#2e7d72"/></svg></span></div>
+          <h2 class="up" style="animation-delay:.1s">월여유에 다시 오셨네요</h2>
+          <p class="sub up" style="animation-delay:.15s">이메일과 비밀번호로 로그인해 주세요.</p>
+
+          <div class="field up" style="animation-delay:.2s" id="f-email">
+            <label for="email">이메일</label>
+            <div class="input"><input id="email" type="email" placeholder="example@email.com" autocomplete="email"></div>
+            <p class="msg">올바른 이메일 주소를 입력해 주세요.</p>
+          </div>
+
+          <div class="field up" style="animation-delay:.25s" id="f-pw">
+            <label for="pw">비밀번호</label>
+            <div class="input">
+              <input id="pw" type="password" placeholder="비밀번호 입력" autocomplete="current-password">
+              <button type="button" class="eye" aria-label="비밀번호 보기">
+                <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a9.9 9.9 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+              </button>
+            </div>
+            <p class="msg">비밀번호는 8자 이상 입력해 주세요.</p>
+          </div>
+
+          <div class="row up" style="animation-delay:.3s">
+            <label class="check"><input type="checkbox" checked> 로그인 상태 유지</label>
+            <a href="#">비밀번호 찾기</a>
+          </div>
+
+          <button type="submit" class="submit up" style="animation-delay:.35s">로그인</button>
+
+          <div class="or up" style="animation-delay:.4s">또는</div>
+          <div class="social up" style="animation-delay:.45s">
+            <button type="button" class="kakao"><img class="sns" src="./img/kakao-symbol.png" alt="" onerror="this.remove()">카카오로 계속하기</button>
+            <button type="button" class="naver"><img class="sns" src="./img/naver-symbol.png" alt="" onerror="this.remove()">네이버로 계속하기</button>
+            <button type="button" class="apple">Apple로 계속하기</button>
+          </div>
+        </form>
       </div>
-    </div>
 
-    <div class="login">
-      <p class="hint">간편하게 시작하기</p>
+      <p class="foot">로그인하면 <a href="#">이용약관</a> 및 <a href="#">개인정보 처리방침</a>에 동의하게 돼요.</p>
+    </main>
 
-      <button type="button" class="sns kakao" id="kakaoBtn">
-        <svg viewBox="0 0 24 24"><path fill="#3b1e1e" d="M12 3C6.48 3 2 6.58 2 11c0 2.84 1.87 5.33 4.69 6.75l-.95 3.5c-.08.3.26.54.52.37l4.17-2.77c.18.01.37.02.57.02 5.52 0 10-3.58 10-8S17.52 3 12 3z"/></svg>
-        카카오톡으로 계속하기
-      </button>
-
-      <button type="button" class="sns apple" id="appleBtn">
-        <svg viewBox="0 0 24 24" fill="#fff"><path d="M16.365 1.43c0 1.14-.493 2.27-1.177 3.08-.744.9-1.99 1.57-2.987 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.22-.04-.39 0-1.15.572-2.27 1.206-2.98.804-.94 2.142-1.64 3.248-1.68.03.13.05.28.05.43zm4.565 15.71c-.03.07-.463 1.58-1.518 3.12-.945 1.34-1.94 2.71-3.43 2.71-1.517 0-1.9-.88-3.63-.88-1.698 0-2.302.91-3.67.91-1.377 0-2.332-1.26-3.428-2.8-1.287-1.82-2.323-4.63-2.323-7.28 0-4.28 2.797-6.55 5.552-6.55 1.448 0 2.675.95 3.6.95.865 0 2.222-1.01 3.902-1.01.613 0 2.886.06 4.374 2.19-.13.09-2.383 1.37-2.383 4.19 0 3.26 2.854 4.42 2.955 4.45z"/></svg>
-        Apple로 계속하기
-      </button>
-
-      <p class="note">로그인하면 다음에도 자동으로 이어서 볼 수 있어요.</p>
-      <p class="terms">계속하면 서비스 이용약관 및 개인정보 처리방침에 동의하게 됩니다.</p>
-    </div>
   </div>
 
-  <!-- 카카오 SDK (버전은 카카오 개발자 사이트 다운로드 페이지의 최신 버전으로 바꾸세요) -->
-<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.1/kakao.min.js" crossorigin="anonymous"></script>
-<!-- 애플 로그인 SDK -->
-<script src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
+  <script>
+    (function () {
+      var form = document.getElementById('loginForm');
+      var email = document.getElementById('email');
+      var pw = document.getElementById('pw');
+      var eye = document.querySelector('.eye');
+      var submit = form.querySelector('.submit');
 
-<script>
-  // ===== 카카오 =====
-  var KAKAO_JS_KEY  = '여기에_카카오_JavaScript_키';
-  var KAKAO_REDIRECT = 'https://내도메인.com/kakao-callback.html';  // 카카오 개발자 사이트에 등록한 주소와 똑같이
-
-  if (!Kakao.isInitialized()) Kakao.init(KAKAO_JS_KEY);
-
-  document.getElementById('kakaoBtn').addEventListener('click', function () {
-    Kakao.Auth.authorize({
-      redirectUri: KAKAO_REDIRECT
-    });
-  });
-
-  // ===== 애플 =====
-  AppleID.auth.init({
-    clientId:    'com.내도메인.서비스ID',                 // Apple의 Services ID
-    scope:       'name email',
-    redirectURI: 'https://내도메인.com/apple-callback',   // Apple에 등록한 주소와 똑같이
-    state:       'login',
-    usePopup:    true                                     // 팝업으로 로그인창 띄우기
-  });
-
-  document.getElementById('appleBtn').addEventListener('click', function () {
-    AppleID.auth.signIn()
-      .then(function (res) {
-        // res.authorization.code, res.authorization.id_token 을 서버로 보내서 검증
-        console.log(res);
-      })
-      .catch(function (err) {
-        console.log('애플 로그인 취소 또는 실패', err);
+      /* 비밀번호 보기 / 숨기기 */
+      eye.addEventListener('click', function () {
+        var show = pw.type === 'password';
+        pw.type = show ? 'text' : 'password';
+        eye.classList.toggle('on', show);
+        eye.setAttribute('aria-label', show ? '비밀번호 숨기기' : '비밀번호 보기');
       });
-  });
-</script>
+
+      /* 입력 검사 */
+      function check() {
+        var okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+        var okPw = pw.value.length >= 8;
+        document.getElementById('f-email').classList.toggle('error', !okEmail);
+        document.getElementById('f-pw').classList.toggle('error', !okPw);
+        return okEmail && okPw;
+      }
+      [email, pw].forEach(function (el) {
+        el.addEventListener('input', function () { el.closest('.field').classList.remove('error'); });
+      });
+
+      /* 로그인 처리 → 성공하면 홈으로 자동 이동 */
+      var KEY = 'wolyeoyu-login';
+      var keep = form.querySelector('.check input');
+      function saveLogin() {
+        try {
+          var store = keep.checked ? localStorage : sessionStorage;
+          store.setItem(KEY, JSON.stringify({ email: email.value.trim(), at: Date.now() }));
+        } catch (err) { /* 저장이 막힌 브라우저에서도 이동은 그대로 */ }
+      }
+      function goHome() { location.replace('./home.html'); }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!check()) { (document.querySelector('.field.error input') || email).focus(); return; }
+        submit.classList.add('loading');
+        saveLogin();
+        setTimeout(goHome, 900);
+      });
+
+      /* 간편 로그인 (데모) */
+      document.querySelectorAll('.social button').forEach(function (b) {
+        b.addEventListener('click', function () {
+          b.style.opacity = '.7';
+          try { localStorage.setItem(KEY, JSON.stringify({ email: b.className, at: Date.now() })); } catch (err) {}
+          setTimeout(goHome, 600);
+        });
+      });
+
+      /* 이미 로그인한 상태로 이 페이지에 오면 바로 홈으로 */
+      try {
+        if (localStorage.getItem(KEY) || sessionStorage.getItem(KEY)) goHome();
+      } catch (err) {}
+    })();
+  </script>
 </body>
 </html>

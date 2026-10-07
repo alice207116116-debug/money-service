@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>소개 | 월여유</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <style>
+    :root {
+      --green: #4a968c;
+      --green-dark: #2e7d72;
+      --green-mid: #88b8bb;
+      --green-light: #dce8e5;
+      --teal: #0f8a84;
+      --bg: #f4f4f4;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Pretendard', sans-serif; background: var(--bg); color: #222; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ===== 상단 바 (화이트 미니멀) ===== */
+    .nav { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; height: 60px;
+           padding: 0 38px; background: #fff; border-bottom: 1px solid #e6e6e6;
+           animation: nav-in .5s cubic-bezier(.2,.7,.2,1) both; }
+    @keyframes nav-in { from { transform: translateY(-100%); opacity: 0; } }
+
+    /* 로고 (월여유) */
+    .nav-title { display: flex; align-items: center; gap: 9px; font-size: 19px; font-weight: 800; letter-spacing: -.5px;
+                 color: #141414; margin-right: 44px; white-space: nowrap; }
+    .logo { display: flex; flex-shrink: 0; }
+    .logo svg { width: 12px; height: 30px; }
+
+    .nav-menu { display: flex; gap: 8px; flex: 1; align-self: stretch; }
+    .nav-menu a { position: relative; display: flex; align-items: center; padding: 0 14px; font-size: 14px;
+                  color: #666; white-space: nowrap; transition: color .2s ease; }
+    .nav-menu a::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: -1px; height: 2px;
+                         background: var(--green-dark); transform: scaleX(0); transform-origin: left;
+                         transition: transform .3s ease; }
+    .nav-menu a:hover { color: var(--green-dark); }
+    .nav-menu a:hover::after, .nav-menu a.active::after { transform: scaleX(1); }
+    .nav-menu a.active { color: var(--green-dark); font-weight: 600; }
+
+    /* 사용자 영역: 알림 + 프로필 사진 */
+    .nav-user { display: flex; align-items: center; gap: 6px; }
+    .ib { position: relative; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;
+          border: 0; border-radius: 50%; background: none; color: #555; cursor: pointer; transition: background .2s ease, color .2s ease; }
+    .ib:hover { background: #f2f5f4; color: var(--green-dark); }
+    .ib svg { width: 21px; height: 21px; }
+    .ib .dot { position: absolute; top: 9px; right: 10px; width: 7px; height: 7px; border-radius: 50%;
+               background: #e0604f; box-shadow: 0 0 0 2px #fff; }
+    .nav-sep { width: 1px; height: 22px; margin: 0 8px; background: #e6e6e6; }
+    .login-btn { display: none; align-items: center; height: 38px; padding: 0 18px; border: 1.5px solid #dfe4e2; border-radius: 999px;
+                 font-size: 14px; font-weight: 600; color: #222; white-space: nowrap; transition: border-color .2s ease, color .2s ease; }
+    .login-btn:hover { border-color: var(--green-dark); color: var(--green-dark); }
+    .nav.is-out .login-btn { display: inline-flex; }
+    .nav.is-out .ib[aria-label="알림"], .nav.is-out .profile, .nav.is-out .nav-sep { display: none; }  /* 로그인 전: 로그인 옆 막대기·알림·프로필 숨김 */
+
+    /* ===== 본문 ===== */
+    body { background: #fff; }
+    .inner { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+    .rv { opacity: 0; transform: translateY(40px); transition: opacity 1s cubic-bezier(.2,.7,.2,1), transform 1s cubic-bezier(.2,.7,.2,1); }
+    .rv.on { opacity: 1; transform: none; }
+    .label { font-size: 16px; font-weight: 700; color: var(--green-dark); }
+    .muted { color: #b5b5b5; }
+
+    /* 1. 히어로 */
+    .hero { padding-top: 140px; padding-bottom: 72px; }
+    .hero h1 { margin-top: 22px; font-size: 84px; font-weight: 800; letter-spacing: -3.5px; line-height: 1.16; color: #111; word-break: keep-all; }
+    .hero-photo { max-width: 1360px; margin: 0 auto; padding: 0 32px; }
+    .hero-photo .frame { height: 620px; border-radius: 40px; overflow: hidden;
+                         background: linear-gradient(135deg, #cfe0dc 0%, #e9eeec 50%, #d6e4e0 100%); }
+    .hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; display: block; }
+
+    /* 2. 선언문 */
+    .statement { padding-top: 180px; padding-bottom: 160px; }
+    .statement .say { margin-top: 28px; font-size: 46px; font-weight: 700; letter-spacing: -1.6px; line-height: 1.45; color: #111; word-break: keep-all; }
+
+    /* 3. 기능 (좌우 교차) */
+    .feature { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 96px; padding: 120px 0; border-top: 1px solid #eee; }
+    .feature.flip .text { order: 2; }
+    .feature .no { font-size: 18px; font-weight: 700; color: var(--green); }
+    .feature h2 { margin-top: 18px; font-size: 52px; font-weight: 800; letter-spacing: -2px; line-height: 1.22; color: #111; word-break: keep-all; }
+    .feature p { margin-top: 24px; font-size: 20px; line-height: 1.7; color: #777; word-break: keep-all; }
+    .visual { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; height: 520px;
+              border-radius: 40px; background: linear-gradient(135deg, #e3eeeb 0%, #f4f6f5 60%, #e8f0ee 100%); }
+    .visual img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .visual.photo::after { content: ""; position: absolute; inset: 0; background: rgba(15,42,38,.12); }
+    .visual .ui { position: relative; z-index: 1; }
+    .ui { width: 340px; padding: 34px 30px; background: #fff; border-radius: 28px; box-shadow: 0 30px 60px -20px rgba(20,60,55,.25); }
+    .ui small { font-size: 14px; color: #888; }
+    .ui .big { margin-top: 10px; font-size: 48px; font-weight: 800; letter-spacing: -2px; color: var(--green-dark); }
+    .ui .sub { margin-top: 10px; font-size: 13px; color: #aaa; }
+    .ui .row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #f1f1f1; font-size: 15px; }
+    .ui .row:last-child { border-bottom: 0; padding-bottom: 0; }
+    .ui .row b { font-weight: 700; }
+    .ui .d { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 42px; height: 46px;
+             margin-right: 12px; border-radius: 12px; background: #f1f6f5; font-size: 10px; color: #888; line-height: 1.1; }
+    .ui .d strong { font-size: 16px; color: var(--green-dark); }
+    .ui .left { display: flex; align-items: center; }
+    .ui .bar { height: 12px; margin-top: 18px; border-radius: 6px; background: #e8eeec; overflow: hidden; }
+    .ui .bar i { display: block; width: 39.5%; height: 100%; border-radius: 6px; background: var(--green-dark); }
+    .ui .meta { display: flex; justify-content: space-between; margin-top: 10px; font-size: 13px; color: #999; }
+
+    /* 4. 숫자 */
+    .numbers { padding: 160px 0; background: #f6f8f7; }
+    .numbers h2 { font-size: 46px; font-weight: 800; letter-spacing: -1.6px; line-height: 1.3; color: #111; }
+    .nums { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 24px; margin-top: 72px; }
+    .num { padding-top: 28px; border-top: 2px solid #111; }
+    .num b { display: block; font-size: 72px; font-weight: 800; letter-spacing: -3px; color: var(--green-dark); line-height: 1; }
+    .num span { display: block; margin-top: 18px; font-size: 18px; color: #555; }
+
+    /* 5. 마무리 */
+    .closing { padding-top: 180px; padding-bottom: 200px; text-align: center; }
+    .closing h2 { font-size: 64px; font-weight: 800; letter-spacing: -2.6px; line-height: 1.25; color: #111; word-break: keep-all; }
+    .closing a { display: inline-flex; align-items: center; gap: 10px; height: 64px; margin-top: 48px; padding: 0 38px; border-radius: 999px;
+                 background: #111; color: #fff; font-size: 18px; font-weight: 700; transition: background .25s ease, transform .25s ease; }
+    .closing a:hover { background: var(--green-dark); transform: translateY(-2px); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .nav { animation: none; }
+      .rv { opacity: 1; transform: none; transition: none; }
+      .nav-menu a, .nav-menu a::after, .ib, .profile, .closing a { transition: none; }
+    }
+
+    @media (max-width: 900px) {
+      .feature { grid-template-columns: 1fr; gap: 48px; padding: 88px 0; }
+      .feature.flip .text { order: 0; }
+      .nums { grid-template-columns: 1fr; gap: 40px; }
+    }
+
+    @media (max-width: 768px) {
+      .nav { padding: 0 16px; }
+      .nav-title { margin-right: 12px; }
+      .nav-name { display: none; }
+      .logo svg { width: 11px; height: 28px; }
+      .nav-menu { gap: 0; overflow-x: auto; }
+      .nav-menu a { padding: 0 8px; font-size: 13px; }
+      .nav-menu a::after { left: 8px; right: 8px; }
+      .nav-sep { display: none; }
+      .profile { width: 34px; height: 34px; }
+      .inner, .hero-photo { padding: 0 20px; }
+      .hero { padding-top: 72px; padding-bottom: 40px; }
+      .hero h1 { font-size: 44px; letter-spacing: -1.8px; }
+      .hero-photo .frame { height: 340px; border-radius: 26px; }
+      .statement { padding-top: 104px; padding-bottom: 88px; }
+      .statement .say { font-size: 28px; letter-spacing: -1px; }
+      .feature h2 { font-size: 34px; letter-spacing: -1.2px; }
+      .feature p { font-size: 17px; }
+      .visual { height: 400px; border-radius: 28px; }
+      .ui { width: 280px; padding: 28px 24px; }
+      .ui .big { font-size: 40px; }
+      .numbers { padding: 96px 0; }
+      .numbers h2 { font-size: 30px; }
+      .nums { margin-top: 48px; }
+      .num b { font-size: 56px; }
+      .closing { padding-top: 112px; padding-bottom: 128px; }
+      .closing h2 { font-size: 38px; letter-spacing: -1.4px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="nav">
+    <div class="nav-title">
+      <a href="./about.html" class="logo" aria-label="월여유 홈">
+        <svg viewBox="0 0 14 34" aria-hidden="true"><circle cx="7" cy="7" r="7" fill="#c4e3dd"/><circle cx="7" cy="17" r="7" fill="#6fb3aa"/><circle cx="7" cy="27" r="7" fill="#2e7d72"/></svg>
+      </a>
+      <span class="nav-name">월여유</span>
+    </div>
+    <nav class="nav-menu">
+      <a href="./about.html">소개</a>
+      <a href="./home.html">홈</a>
+      <a href="./dashboard.html">대시보드</a>
+      <a href="./salary.html">월급 관리</a>
+      <a href="./support.html">고객센터</a>
+    </nav>
+    <div class="nav-user">
+      <button type="button" class="ib" aria-label="알림">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        <i class="dot"></i>
+      </button>
+      <span class="nav-sep"></span>
+      <button type="button" class="profile" aria-label="내 프로필">
+        <!-- 실제 사진이 있으면 아래 svg 대신 <img src="사진주소" alt=""> 를 넣으세요 -->
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4.2"/><path d="M3.5 22c1.2-4.6 4.6-7.2 8.5-7.2s7.3 2.6 8.5 7.2z"/></svg>
+      </button>
+      <a href="./login.html" class="login-btn">로그인</a>
+    </div>
+  </header>
+  <script>
+    /* 지금 열린 페이지의 메뉴에만 밑줄 표시 */
+    (function () {
+      var page = location.pathname.split('/').pop() || 'home.html';
+      document.querySelectorAll('.nav-menu a').forEach(function (a) {
+        a.classList.toggle('active', a.getAttribute('href').replace('./', '') === page);
+      });
+    })();
+
+    /* 로그인 상태에 따라 상단 오른쪽 바꾸기: 로그인 전 → '로그인' 버튼 / 로그인 후 → 알림 · 프로필 */
+    (function () {
+      var on = false;
+      try { on = !!(localStorage.getItem('wolyeoyu-login') || sessionStorage.getItem('wolyeoyu-login')); } catch (e) {}
+      document.querySelector('.nav').classList.add(on ? 'is-in' : 'is-out');
+    })();
+  </script>
+
+  <main>
+
+    <!-- 1. 히어로 -->
+    <section class="hero inner">
+      <p class="label rv">월여유</p>
+      <h1 class="rv">월급날까지,<br>오늘 쓸 돈만<br>보면 돼요</h1>
+    </section>
+    <div class="hero-photo rv">
+      <div class="frame">
+        <!-- 사진: Brooke Cagle / Unsplash (Unsplash License) — src만 바꾸면 다른 사진으로 교체돼요 -->
+        <img src="https://images.unsplash.com/photo-1653762371653-2d21fb7ffd26?auto=format&fit=crop&w=2400&q=80"
+             alt="카페에서 휴대폰을 보고 있는 사람" onerror="this.remove()">
+      </div>
+    </div>
+
+    <!-- 2. 선언문 -->
+    <section class="statement inner">
+      <p class="label rv">우리가 하는 일</p>
+      <p class="say rv">복잡한 가계부는 쓰지 않아도 괜찮아요.<br><span class="muted">월급과 고정지출만 알려주시면,</span><br>매일 써도 되는 금액을 숫자 하나로 알려드려요.</p>
+    </section>
+
+    <!-- 3. 기능 -->
+    <section class="inner">
+      <div class="feature">
+        <div class="text rv">
+          <p class="no">01</p>
+          <h2>오늘 쓸 돈을<br>자동으로 계산해요</h2>
+          <p>남은 돈에서 고정지출과 저축을 빼고,<br>다음 월급날까지 남은 날로 나눠 드려요.</p>
+        </div>
+        <div class="visual rv">
+          <div class="ui"><small>오늘 쓸 수 있는 돈</small><p class="big">60,800원</p><p class="sub">남은 25일 동안 하루에 이만큼 쓰면 돼요</p></div>
+        </div>
+      </div>
+
+      <div class="feature flip">
+        <div class="text rv">
+          <p class="no">02</p>
+          <h2>빠져나갈 돈은<br>미리 알려드려요</h2>
+          <p>월세, 통신비, 구독료처럼 매달 나가는 돈을<br>결제일 전에 먼저 챙겨 드려요.</p>
+        </div>
+        <div class="visual photo rv">
+          <!-- 사진: Spl Interiors / Unsplash (Unsplash License) -->
+          <img src="https://images.unsplash.com/photo-1746517757473-7c88850e539b?auto=format&fit=crop&w=1400&q=80"
+               alt="햇살이 드는 거실" loading="lazy" onerror="this.remove()">
+          <div class="ui">
+            <div class="row"><span class="left"><span class="d">10월<strong>10</strong></span>월세</span><b>500,000원</b></div>
+            <div class="row"><span class="left"><span class="d">10월<strong>15</strong></span>통신비</span><b>55,000원</b></div>
+            <div class="row"><span class="left"><span class="d">10월<strong>21</strong></span>구독 서비스</span><b>17,900원</b></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="text rv">
+          <p class="no">03</p>
+          <h2>모으는 즐거움까지<br>함께해요</h2>
+          <p>이번 달 저축 목표를 정하면<br>얼마나 모였는지 한눈에 보여드려요.</p>
+        </div>
+        <div class="visual photo rv">
+          <!-- 사진: Nika Benedictova / Unsplash (Unsplash License) -->
+          <img src="https://images.unsplash.com/photo-1721831143856-81ad5de04de4?auto=format&fit=crop&w=1400&q=80"
+               alt="동전이 담긴 유리병" loading="lazy" onerror="this.remove()">
+          <div class="ui"><small>이번 달 저축 목표</small><p class="big">39.5%</p><div class="bar"><i></i></div><div class="meta"><span>600,000원</span><span>1,520,000원</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 숫자 -->
+    <section class="numbers">
+      <div class="inner">
+        <h2 class="rv">시작은 가볍게,<br>관리는 꾸준하게</h2>
+        <div class="nums">
+          <div class="num rv"><b>1번</b><span>월급과 고정지출 입력은 한 번이면 끝</span></div>
+          <div class="num rv"><b>1개</b><span>매일 확인할 숫자는 딱 하나</span></div>
+          <div class="num rv"><b>0원</b><span>이용 요금 없이 무료로</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. 마무리 -->
+    <section class="closing inner">
+      <h2 class="rv">이번 달부터<br>가볍게 시작해 보세요</h2>
+      <a href="./login.html" class="rv">시작하기 →</a>
+    </section>
+
+  </main>
+
+  <script>
+    (function () {
+      var els = document.querySelectorAll('.rv');
+      if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        els.forEach(function (el) { el.classList.add('on'); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+      els.forEach(function (el) { io.observe(el); });
+    })();
+  </script>
+
+  <script>
+    /* ===== 알림 (종 누르면 알림 목록) ===== */
+    (function () {
+      var css = `
+        .nav-user { position: relative; }
+        @keyframes nx-pop { from { opacity: 0; transform: translateY(-6px); } }
+
+        /* 알림 패널 */
+        .noti { position: absolute; top: calc(100% + 12px); right: 0; z-index: 30; width: 360px; max-width: calc(100vw - 32px);
+                padding: 8px; background: #fff; border: 1px solid #ececec; border-radius: 20px; white-space: normal;
+                box-shadow: 0 24px 48px -16px rgba(20,60,55,.28); animation: nx-pop .18s ease; }
+        .noti[hidden] { display: none; }
+        .noti-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px 8px; }
+        .noti-head b { font-size: 16px; color: #141414; }
+        .noti-read { border: 0; background: none; font: inherit; font-size: 13px; font-weight: 600; color: var(--green-dark); cursor: pointer; }
+        .noti ul { list-style: none; }
+        .noti li { position: relative; display: flex; gap: 12px; padding: 12px 14px; border-radius: 14px; }
+        .noti li:hover { background: #f6f8f7; }
+        .noti li.new::after { content: ""; position: absolute; top: 18px; right: 14px; width: 6px; height: 6px; border-radius: 50%; background: var(--green-dark); }
+        .noti-ic { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 36px; height: 36px;
+                   border-radius: 50%; background: #e3f0ed; color: var(--green-dark); }
+        .noti-ic.warn { background: #fdecea; color: #d4574a; }
+        .noti-ic svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+        .noti-txt small { font-size: 12px; color: #9a9a9a; }
+        .noti-txt p { margin-top: 3px; padding-right: 14px; font-size: 14px; line-height: 1.45; color: #333; word-break: keep-all; }
+        .noti-txt p b { color: #141414; }
+        .noti-all { display: block; margin-top: 4px; padding: 12px; border-top: 1px solid #f0f0f0; text-align: center; font-size: 14px; color: #555; }
+        .noti-all:hover { color: var(--green-dark); }
+
+        @media (max-width: 768px) {
+          .noti { position: fixed; top: 68px; right: 12px; left: 12px; width: auto; max-width: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .noti { animation: none; }
+        }
+      `;
+      var style = document.createElement('style');
+      style.textContent = css;
+      document.head.appendChild(style);
+
+      var user = document.querySelector('.nav-user');
+      var bell = document.querySelector('.ib[aria-label="알림"]');
+      if (!user || !bell) return;
+
+      /* 공통 도구 */
+      function pick(arr, n) {
+        var a = arr.slice();
+        for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+        return a.slice(0, n);
+      }
+      var ICON = {
+        cal: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+        coin: '<circle cx="12" cy="12" r="9"/><path d="M14.5 9.5h-3.2a1.8 1.8 0 0 0 0 3.6h1.4a1.8 1.8 0 0 1 0 3.6H9.5M12 7v1.8M12 16.7v1.8"/>',
+        card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
+        alert: '<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/>',
+        target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/>',
+        trend: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>'
+      };
+      function svg(name) { return '<svg viewBox="0 0 24 24">' + ICON[name] + '</svg>'; }
+
+      /* ---------- 알림 ---------- */
+      var NOTI = [
+        { i: 'cal',    k: '결제 예정',   t: '월세 <b>500,000원</b>이 3일 뒤 빠져나가요' },
+        { i: 'coin',   k: '오늘 예산',   t: '오늘 쓸 수 있는 돈은 <b>60,800원</b>이에요' },
+        { i: 'alert',  k: '예산 초과',   t: '화요일에 하루 예산을 <b>10,300원</b> 넘었어요', warn: true },
+        { i: 'target', k: '저축',       t: '이번 달 저축 목표의 <b>39.5%</b>를 달성했어요' },
+        { i: 'cal',    k: '결제 예정',   t: '통신비 <b>55,000원</b>이 10월 15일에 결제돼요' },
+        { i: 'card',   k: '결제 완료',   t: '스타벅스에서 <b>4,800원</b>이 결제됐어요' },
+        { i: 'trend',  k: '지출 리포트', t: '이번 주 지출이 지난주보다 <b>12%</b> 줄었어요' },
+        { i: 'coin',   k: '월급',       t: '월급날까지 <b>18일</b> 남았어요' },
+        { i: 'cal',    k: '결제 예정',   t: '구독 서비스 <b>17,900원</b>이 21일에 결제돼요' },
+        { i: 'card',   k: '결제 완료',   t: '무신사에서 <b>51,000원</b>이 결제됐어요' }
+      ];
+      var TIMES = ['방금 전', '12분 전', '1시간 전', '3시간 전', '어제'];
+
+      var noti = document.createElement('div');
+      noti.className = 'noti';
+      noti.hidden = true;
+      user.appendChild(noti);
+
+      function renderNoti() {
+        var list = pick(NOTI, 4);
+        var unread = bell.querySelector('.dot') ? 1 + Math.floor(Math.random() * 3) : 0;
+        noti.innerHTML =
+          '<div class="noti-head"><b>알림</b><button type="button" class="noti-read">모두 읽음</button></div>' +
+          '<ul>' + list.map(function (n, idx) {
+            return '<li class="' + (idx < unread ? 'new' : '') + '">' +
+                     '<span class="noti-ic' + (n.warn ? ' warn' : '') + '">' + svg(n.i) + '</span>' +
+                     '<div class="noti-txt"><small>' + n.k + ' · ' + TIMES[idx] + '</small><p>' + n.t + '</p></div>' +
+                   '</li>';
+          }).join('') + '</ul>' +
+          '<a class="noti-all" href="./dashboard.html">전체 알림 보기</a>';
+        noti.querySelector('.noti-read').addEventListener('click', function () {
+          noti.querySelectorAll('li.new').forEach(function (li) { li.classList.remove('new'); });
+          var dot = bell.querySelector('.dot');
+          if (dot) dot.remove();
+        });
+      }
+
+      function closeNoti() { noti.hidden = true; bell.setAttribute('aria-expanded', 'false'); }
+      bell.setAttribute('aria-expanded', 'false');
+      bell.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (noti.hidden) { renderNoti(); noti.hidden = false; bell.setAttribute('aria-expanded', 'true'); }
+        else closeNoti();
+      });
+      noti.addEventListener('click', function (e) { e.stopPropagation(); });
+      document.addEventListener('click', closeNoti);
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeNoti();
+      });
+    })();
+  </script>
+
+</body>
+</html>
