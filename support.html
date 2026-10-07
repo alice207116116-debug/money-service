@@ -151,6 +151,40 @@
       .faq .q { font-size: 16px; }
       .faq details p { padding: 0 8px 24px 38px; font-size: 15px; }
     }
+  
+    /* ===== 로그인 후 프로필 버튼 (둥근 네모 아바타) ===== */
+    .nav-user { position: relative; }
+    .nav.is-in .nav-sep { display: none; }
+    .profile { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; margin-left: 4px;
+               padding: 0; border: 0; border-radius: 12px; background: var(--green-light); color: var(--green-dark);
+               overflow: hidden; cursor: pointer; transition: background .2s ease, box-shadow .2s ease, transform .2s ease; }
+    .profile:hover { background: #cfe2de; transform: translateY(-1px); }
+    .profile[aria-expanded="true"] { box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--green-dark); }
+    .profile:focus-visible { outline: 0; box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--green-dark); }
+    .pf-av { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 100%; height: 100%;
+             overflow: hidden; border-radius: 12px; background: var(--green-light); color: var(--green-dark); }
+    .pf-av svg { width: 22px; height: 22px; fill: currentColor; }
+    .pf-av img { width: 100%; height: 100%; object-fit: cover; }
+    .pf-menu { position: absolute; top: calc(100% + 12px); right: 0; z-index: 30; width: 240px; padding: 8px;
+               background: #fff; border: 1px solid #ececec; border-radius: 20px;
+               box-shadow: 0 24px 48px -16px rgba(20,60,55,.28); animation: pf-pop .18s ease; }
+    .pf-menu[hidden] { display: none; }
+    @keyframes pf-pop { from { opacity: 0; transform: translateY(-6px); } }
+    .pf-head { display: flex; align-items: center; gap: 12px; padding: 10px 10px 12px; border-bottom: 1px solid #f0f0f0; margin-bottom: 6px; }
+    .pf-head .pf-av { width: 40px; height: 40px; }
+    .pf-head b { display: block; font-size: 15px; color: #141414; }
+    .pf-head small { font-size: 12px; color: #999; }
+    .pf-menu a, .pf-menu button.pf-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 11px 10px;
+               border: 0; border-radius: 12px; background: none; font: inherit; font-size: 14px; color: #333; text-align: left; cursor: pointer; }
+    .pf-menu a:hover, .pf-menu button.pf-item:hover { background: #f3f7f6; }
+    .pf-menu svg { width: 18px; height: 18px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.8;
+                   stroke-linecap: round; stroke-linejoin: round; color: var(--green-dark); }
+    .pf-menu .pf-out, .pf-menu .pf-out svg { color: #d4574a; }
+    @media (max-width: 768px) {
+      .profile { width: 34px; height: 34px; border-radius: 11px; }
+      .pf-menu { position: fixed; top: 68px; right: 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) { .profile, .pf-menu { transition: none; animation: none; } }
   </style>
 </head>
 
@@ -179,10 +213,21 @@
         <i class="dot"></i>
       </button>
       <span class="nav-sep"></span>
-      <button type="button" class="profile" aria-label="내 프로필">
-        <!-- 실제 사진이 있으면 아래 svg 대신 <img src="사진주소" alt=""> 를 넣으세요 -->
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4.2"/><path d="M3.5 22c1.2-4.6 4.6-7.2 8.5-7.2s7.3 2.6 8.5 7.2z"/></svg>
+      <button type="button" class="profile" aria-label="내 프로필 메뉴" aria-haspopup="menu" aria-expanded="false">
+        <span class="pf-av">
+          <!-- 실제 사진이 있으면 아래 svg 대신 <img src="사진주소" alt=""> 를 넣으세요 -->
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4.2"/><path d="M3.5 22c1.2-4.6 4.6-7.2 8.5-7.2s7.3 2.6 8.5 7.2z"/></svg>
+        </span>
       </button>
+      <div class="pf-menu" id="pfMenu" role="menu" hidden>
+        <div class="pf-head">
+          <span class="pf-av"><svg viewBox="0 0 24 24" style="fill:currentColor;stroke:none"><circle cx="12" cy="8.5" r="4.2"/><path d="M3.5 22c1.2-4.6 4.6-7.2 8.5-7.2s7.3 2.6 8.5 7.2z"/></svg></span>
+          <span><b class="pf-user">김여유</b><small class="pf-mail">yeoyu@mail.com</small></span>
+        </div>
+        <a href="#" role="menuitem"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6"/></svg>내 정보</a>
+        <a href="./salary.html" role="menuitem"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>월급 · 알림 설정</a>
+        <button type="button" class="pf-item pf-out" role="menuitem"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>로그아웃</button>
+      </div>
       <a href="./login.html" class="login-btn">로그인</a>
     </div>
   </header>
@@ -469,6 +514,44 @@
       });
       document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') { closeSearch(); closeNoti(); }
+      });
+    })();
+  </script>
+
+  <script>
+    /* ===== 프로필 버튼: 이름 넣기 · 누르면 메뉴 · 로그아웃 ===== */
+    (function () {
+      var nav = document.querySelector('.nav');
+      var btn = document.querySelector('.profile');
+      var menu = document.getElementById('pfMenu');
+      if (!btn || !menu) return;
+      var name = '김여유', mail = 'yeoyu@mail.com';
+      try {
+        name = localStorage.getItem('wolyeoyu-name') || sessionStorage.getItem('wolyeoyu-name') || name;
+        mail = localStorage.getItem('wolyeoyu-mail') || sessionStorage.getItem('wolyeoyu-mail') || mail;
+      } catch (e) {}
+      menu.querySelector('.pf-user').textContent = name;
+      menu.querySelector('.pf-mail').textContent = mail;
+
+      function setOpen(v) { menu.hidden = !v; btn.setAttribute('aria-expanded', v ? 'true' : 'false'); }
+      btn.addEventListener('click', function () { setOpen(menu.hidden); });
+      /* 바깥을 누르면 닫기 (알림 종·검색을 눌러도 닫힘) */
+      document.addEventListener('click', function (e) {
+        if (!menu.hidden && !btn.contains(e.target) && !menu.contains(e.target)) setOpen(false);
+      }, true);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !menu.hidden) { setOpen(false); btn.focus(); }
+      });
+
+      menu.querySelector('.pf-out').addEventListener('click', function () {
+        try {
+          ['wolyeoyu-login', 'wolyeoyu-name', 'wolyeoyu-mail'].forEach(function (k) {
+            localStorage.removeItem(k); sessionStorage.removeItem(k);
+          });
+        } catch (e) {}
+        setOpen(false);
+        nav.classList.remove('is-in');
+        nav.classList.add('is-out');
       });
     })();
   </script>

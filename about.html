@@ -42,20 +42,42 @@
     .nav-menu a:hover::after, .nav-menu a.active::after { transform: scaleX(1); }
     .nav-menu a.active { color: var(--green-dark); font-weight: 600; }
 
-    /* 사용자 영역: 알림 + 프로필 사진 */
+    /* 사용자 영역: 프로필 사진 (이 페이지에는 알림 없음) */
     .nav-user { display: flex; align-items: center; gap: 6px; }
-    .ib { position: relative; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;
-          border: 0; border-radius: 50%; background: none; color: #555; cursor: pointer; transition: background .2s ease, color .2s ease; }
-    .ib:hover { background: #f2f5f4; color: var(--green-dark); }
-    .ib svg { width: 21px; height: 21px; }
-    .ib .dot { position: absolute; top: 9px; right: 10px; width: 7px; height: 7px; border-radius: 50%;
-               background: #e0604f; box-shadow: 0 0 0 2px #fff; }
-    .nav-sep { width: 1px; height: 22px; margin: 0 8px; background: #e6e6e6; }
     .login-btn { display: none; align-items: center; height: 38px; padding: 0 18px; border: 1.5px solid #dfe4e2; border-radius: 999px;
                  font-size: 14px; font-weight: 600; color: #222; white-space: nowrap; transition: border-color .2s ease, color .2s ease; }
     .login-btn:hover { border-color: var(--green-dark); color: var(--green-dark); }
     .nav.is-out .login-btn { display: inline-flex; }
-    .nav.is-out .ib[aria-label="알림"], .nav.is-out .profile, .nav.is-out .nav-sep { display: none; }  /* 로그인 전: 로그인 옆 막대기·알림·프로필 숨김 */
+    .nav.is-out .profile { display: none; }  /* 로그인 전: 프로필 숨김 */
+
+    /* 로그인 후 프로필 버튼 (둥근 네모 아바타) */
+    .nav-user { position: relative; }
+    .profile { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px;
+               padding: 0; border: 0; border-radius: 12px; background: var(--green-light); color: var(--green-dark);
+               overflow: hidden; transition: background .2s ease, box-shadow .2s ease, transform .2s ease; }
+    .profile:hover { background: #cfe2de; transform: translateY(-1px); }
+    .profile[aria-expanded="true"] { box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--green-dark); }
+    .profile:focus-visible { outline: 0; box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--green-dark); }
+    .pf-av { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 100%; height: 100%;
+             overflow: hidden; border-radius: 12px; background: var(--green-light); color: var(--green-dark); }
+    .pf-av svg { width: 22px; height: 22px; fill: currentColor; }
+    .pf-av img { width: 100%; height: 100%; object-fit: cover; }
+
+    .pf-menu { position: absolute; top: calc(100% + 12px); right: 0; z-index: 30; width: 240px; padding: 8px;
+               background: #fff; border: 1px solid #ececec; border-radius: 20px;
+               box-shadow: 0 24px 48px -16px rgba(20,60,55,.28); animation: pf-pop .18s ease; }
+    .pf-menu[hidden] { display: none; }
+    @keyframes pf-pop { from { opacity: 0; transform: translateY(-6px); } }
+    .pf-head { display: flex; align-items: center; gap: 12px; padding: 10px 10px 12px; border-bottom: 1px solid #f0f0f0; margin-bottom: 6px; }
+    .pf-head .pf-av { width: 40px; height: 40px; border-radius: 12px; }
+    .pf-head b { display: block; font-size: 15px; color: #141414; }
+    .pf-head small { font-size: 12px; color: #999; }
+    .pf-menu a, .pf-menu button.pf-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 11px 10px;
+               border: 0; border-radius: 12px; background: none; font: inherit; font-size: 14px; color: #333; text-align: left; }
+    .pf-menu a:hover, .pf-menu button.pf-item:hover { background: #f3f7f6; }
+    .pf-menu svg { width: 18px; height: 18px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.8;
+                   stroke-linecap: round; stroke-linejoin: round; color: var(--green-dark); }
+    .pf-menu .pf-out, .pf-menu .pf-out svg { color: #d4574a; }
 
     /* ===== 본문 ===== */
     body { background: #fff; }
@@ -121,7 +143,7 @@
     @media (prefers-reduced-motion: reduce) {
       .nav { animation: none; }
       .rv { opacity: 1; transform: none; transition: none; }
-      .nav-menu a, .nav-menu a::after, .ib, .profile, .closing a { transition: none; }
+      .nav-menu a, .nav-menu a::after, .profile, .closing a { transition: none; }
     }
 
     @media (max-width: 900px) {
@@ -138,8 +160,8 @@
       .nav-menu { gap: 0; overflow-x: auto; }
       .nav-menu a { padding: 0 8px; font-size: 13px; }
       .nav-menu a::after { left: 8px; right: 8px; }
-      .nav-sep { display: none; }
-      .profile { width: 34px; height: 34px; }
+      .profile { width: 34px; height: 34px; border-radius: 11px; }
+      .pf-menu { position: fixed; top: 68px; right: 12px; }
       .inner, .hero-photo { padding: 0 20px; }
       .hero { padding-top: 72px; padding-bottom: 40px; }
       .hero h1 { font-size: 44px; letter-spacing: -1.8px; }
@@ -178,15 +200,21 @@
       <a href="./support.html">고객센터</a>
     </nav>
     <div class="nav-user">
-      <button type="button" class="ib" aria-label="알림">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-        <i class="dot"></i>
+      <button type="button" class="profile" aria-label="내 프로필 메뉴" aria-haspopup="menu" aria-expanded="false">
+        <span class="pf-av">
+          <!-- 실제 사진이 있으면 아래 svg 대신 <img src="사진주소" alt=""> 를 넣으세요 -->
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4.2"/><path d="M3.5 22c1.2-4.6 4.6-7.2 8.5-7.2s7.3 2.6 8.5 7.2z"/></svg>
+        </span>
       </button>
-      <span class="nav-sep"></span>
-      <button type="button" class="profile" aria-label="내 프로필">
-        <!-- 실제 사진이 있으면 아래 svg 대신 <img src="사진주소" alt=""> 를 넣으세요 -->
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4.2"/><path d="M3.5 22c1.2-4.6 4.6-7.2 8.5-7.2s7.3 2.6 8.5 7.2z"/></svg>
-      </button>
+      <div class="pf-menu" id="pfMenu" role="menu" hidden>
+        <div class="pf-head">
+          <span class="pf-av"><svg viewBox="0 0 24 24" style="fill:currentColor;stroke:none"><circle cx="12" cy="8.5" r="4.2"/><path d="M3.5 22c1.2-4.6 4.6-7.2 8.5-7.2s7.3 2.6 8.5 7.2z"/></svg></span>
+          <span><b class="pf-user">김여유</b><small class="pf-mail">yeoyu@mail.com</small></span>
+        </div>
+        <a href="#" role="menuitem"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6"/></svg>내 정보</a>
+        <a href="./salary.html" role="menuitem"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>월급 · 알림 설정</a>
+        <button type="button" class="pf-item pf-out" role="menuitem"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>로그아웃</button>
+      </div>
       <a href="./login.html" class="login-btn">로그인</a>
     </div>
   </header>
@@ -199,11 +227,45 @@
       });
     })();
 
-    /* 로그인 상태에 따라 상단 오른쪽 바꾸기: 로그인 전 → '로그인' 버튼 / 로그인 후 → 알림 · 프로필 */
+    /* 로그인 상태에 따라 상단 오른쪽 바꾸기: 로그인 전 → '로그인' 버튼 / 로그인 후 → 프로필 */
     (function () {
       var on = false;
       try { on = !!(localStorage.getItem('wolyeoyu-login') || sessionStorage.getItem('wolyeoyu-login')); } catch (e) {}
       document.querySelector('.nav').classList.add(on ? 'is-in' : 'is-out');
+    })();
+
+    /* 프로필 버튼: 이름 넣기 · 누르면 메뉴 · 로그아웃 */
+    (function () {
+      var nav = document.querySelector('.nav');
+      var btn = document.querySelector('.profile');
+      var menu = document.getElementById('pfMenu');
+      var name = '김여유', mail = 'yeoyu@mail.com';
+      try {
+        name = localStorage.getItem('wolyeoyu-name') || sessionStorage.getItem('wolyeoyu-name') || name;
+        mail = localStorage.getItem('wolyeoyu-mail') || sessionStorage.getItem('wolyeoyu-mail') || mail;
+      } catch (e) {}
+      document.querySelector('.pf-user').textContent = name;
+      document.querySelector('.pf-mail').textContent = mail;
+
+      function setOpen(v) { menu.hidden = !v; btn.setAttribute('aria-expanded', v ? 'true' : 'false'); }
+      btn.addEventListener('click', function () { setOpen(menu.hidden); });
+      document.addEventListener('click', function (e) {
+        if (!menu.hidden && !btn.contains(e.target) && !menu.contains(e.target)) setOpen(false);
+      }, true);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !menu.hidden) { setOpen(false); btn.focus(); }
+      });
+
+      menu.querySelector('.pf-out').addEventListener('click', function () {
+        try {
+          ['wolyeoyu-login', 'wolyeoyu-name', 'wolyeoyu-mail'].forEach(function (k) {
+            localStorage.removeItem(k); sessionStorage.removeItem(k);
+          });
+        } catch (e) {}
+        setOpen(false);
+        nav.classList.remove('is-in');
+        nav.classList.add('is-out');
+      });
     })();
   </script>
 
@@ -307,121 +369,6 @@
         });
       }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
       els.forEach(function (el) { io.observe(el); });
-    })();
-  </script>
-
-  <script>
-    /* ===== 알림 (종 누르면 알림 목록) ===== */
-    (function () {
-      var css = `
-        .nav-user { position: relative; }
-        @keyframes nx-pop { from { opacity: 0; transform: translateY(-6px); } }
-
-        /* 알림 패널 */
-        .noti { position: absolute; top: calc(100% + 12px); right: 0; z-index: 30; width: 360px; max-width: calc(100vw - 32px);
-                padding: 8px; background: #fff; border: 1px solid #ececec; border-radius: 20px; white-space: normal;
-                box-shadow: 0 24px 48px -16px rgba(20,60,55,.28); animation: nx-pop .18s ease; }
-        .noti[hidden] { display: none; }
-        .noti-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px 8px; }
-        .noti-head b { font-size: 16px; color: #141414; }
-        .noti-read { border: 0; background: none; font: inherit; font-size: 13px; font-weight: 600; color: var(--green-dark); cursor: pointer; }
-        .noti ul { list-style: none; }
-        .noti li { position: relative; display: flex; gap: 12px; padding: 12px 14px; border-radius: 14px; }
-        .noti li:hover { background: #f6f8f7; }
-        .noti li.new::after { content: ""; position: absolute; top: 18px; right: 14px; width: 6px; height: 6px; border-radius: 50%; background: var(--green-dark); }
-        .noti-ic { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 36px; height: 36px;
-                   border-radius: 50%; background: #e3f0ed; color: var(--green-dark); }
-        .noti-ic.warn { background: #fdecea; color: #d4574a; }
-        .noti-ic svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-        .noti-txt small { font-size: 12px; color: #9a9a9a; }
-        .noti-txt p { margin-top: 3px; padding-right: 14px; font-size: 14px; line-height: 1.45; color: #333; word-break: keep-all; }
-        .noti-txt p b { color: #141414; }
-        .noti-all { display: block; margin-top: 4px; padding: 12px; border-top: 1px solid #f0f0f0; text-align: center; font-size: 14px; color: #555; }
-        .noti-all:hover { color: var(--green-dark); }
-
-        @media (max-width: 768px) {
-          .noti { position: fixed; top: 68px; right: 12px; left: 12px; width: auto; max-width: none; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .noti { animation: none; }
-        }
-      `;
-      var style = document.createElement('style');
-      style.textContent = css;
-      document.head.appendChild(style);
-
-      var user = document.querySelector('.nav-user');
-      var bell = document.querySelector('.ib[aria-label="알림"]');
-      if (!user || !bell) return;
-
-      /* 공통 도구 */
-      function pick(arr, n) {
-        var a = arr.slice();
-        for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
-        return a.slice(0, n);
-      }
-      var ICON = {
-        cal: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
-        coin: '<circle cx="12" cy="12" r="9"/><path d="M14.5 9.5h-3.2a1.8 1.8 0 0 0 0 3.6h1.4a1.8 1.8 0 0 1 0 3.6H9.5M12 7v1.8M12 16.7v1.8"/>',
-        card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
-        alert: '<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/>',
-        target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/>',
-        trend: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>'
-      };
-      function svg(name) { return '<svg viewBox="0 0 24 24">' + ICON[name] + '</svg>'; }
-
-      /* ---------- 알림 ---------- */
-      var NOTI = [
-        { i: 'cal',    k: '결제 예정',   t: '월세 <b>500,000원</b>이 3일 뒤 빠져나가요' },
-        { i: 'coin',   k: '오늘 예산',   t: '오늘 쓸 수 있는 돈은 <b>60,800원</b>이에요' },
-        { i: 'alert',  k: '예산 초과',   t: '화요일에 하루 예산을 <b>10,300원</b> 넘었어요', warn: true },
-        { i: 'target', k: '저축',       t: '이번 달 저축 목표의 <b>39.5%</b>를 달성했어요' },
-        { i: 'cal',    k: '결제 예정',   t: '통신비 <b>55,000원</b>이 10월 15일에 결제돼요' },
-        { i: 'card',   k: '결제 완료',   t: '스타벅스에서 <b>4,800원</b>이 결제됐어요' },
-        { i: 'trend',  k: '지출 리포트', t: '이번 주 지출이 지난주보다 <b>12%</b> 줄었어요' },
-        { i: 'coin',   k: '월급',       t: '월급날까지 <b>18일</b> 남았어요' },
-        { i: 'cal',    k: '결제 예정',   t: '구독 서비스 <b>17,900원</b>이 21일에 결제돼요' },
-        { i: 'card',   k: '결제 완료',   t: '무신사에서 <b>51,000원</b>이 결제됐어요' }
-      ];
-      var TIMES = ['방금 전', '12분 전', '1시간 전', '3시간 전', '어제'];
-
-      var noti = document.createElement('div');
-      noti.className = 'noti';
-      noti.hidden = true;
-      user.appendChild(noti);
-
-      function renderNoti() {
-        var list = pick(NOTI, 4);
-        var unread = bell.querySelector('.dot') ? 1 + Math.floor(Math.random() * 3) : 0;
-        noti.innerHTML =
-          '<div class="noti-head"><b>알림</b><button type="button" class="noti-read">모두 읽음</button></div>' +
-          '<ul>' + list.map(function (n, idx) {
-            return '<li class="' + (idx < unread ? 'new' : '') + '">' +
-                     '<span class="noti-ic' + (n.warn ? ' warn' : '') + '">' + svg(n.i) + '</span>' +
-                     '<div class="noti-txt"><small>' + n.k + ' · ' + TIMES[idx] + '</small><p>' + n.t + '</p></div>' +
-                   '</li>';
-          }).join('') + '</ul>' +
-          '<a class="noti-all" href="./dashboard.html">전체 알림 보기</a>';
-        noti.querySelector('.noti-read').addEventListener('click', function () {
-          noti.querySelectorAll('li.new').forEach(function (li) { li.classList.remove('new'); });
-          var dot = bell.querySelector('.dot');
-          if (dot) dot.remove();
-        });
-      }
-
-      function closeNoti() { noti.hidden = true; bell.setAttribute('aria-expanded', 'false'); }
-      bell.setAttribute('aria-expanded', 'false');
-      bell.addEventListener('click', function (e) {
-        e.stopPropagation();
-        if (noti.hidden) { renderNoti(); noti.hidden = false; bell.setAttribute('aria-expanded', 'true'); }
-        else closeNoti();
-      });
-      noti.addEventListener('click', function (e) { e.stopPropagation(); });
-      document.addEventListener('click', closeNoti);
-
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') closeNoti();
-      });
     })();
   </script>
 

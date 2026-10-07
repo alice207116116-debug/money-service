@@ -597,10 +597,6 @@
 
     /* 자산 현황 */
     .asset {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 20px;
       margin-top: 26px;
     }
 
@@ -618,12 +614,324 @@
       white-space: nowrap;
     }
 
-    .asset svg {
-      width: 230px;
-      max-width: 45%;
-      height: auto;
-      flex-shrink: 1;
+    /* 이번 달 목표: 다른 목표들 + 버튼 (C안) */
+    .subgoals {
+      list-style: none;
+      margin-top: 22px;
     }
+
+    .subgoals li {
+      margin-top: 10px;
+      padding: 13px 16px;
+      border: 1px solid #eee;
+      border-radius: 14px;
+      animation: sg-in .4s ease both;
+    }
+
+    @keyframes sg-in {
+      from { opacity: 0; transform: translateY(6px); }
+    }
+
+    .sg-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 15px;
+    }
+
+    .sg-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .sg-name svg {
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+      fill: none;
+      stroke: var(--teal);
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .sg-name span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sg-pct {
+      font-size: 14px;
+      color: #999;
+      white-space: nowrap;
+    }
+
+    .sg-pct.done {
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    .sg-bar {
+      height: 6px;
+      margin-top: 9px;
+      border-radius: 3px;
+      background: #e6ebeb;
+      overflow: hidden;
+    }
+
+    .sg-bar i {
+      display: block;
+      height: 100%;
+      width: 0;
+      border-radius: 3px;
+      background: #6fb3aa;
+      transition: width .7s cubic-bezier(.4,0,.2,1);
+    }
+
+    .goal-btns {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .goal-btns button {
+      flex: 1;
+      height: 44px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      transition: background .2s ease, color .2s ease;
+    }
+
+    .gb-primary {
+      border: 0;
+      background: #141414;
+      color: #fff;
+    }
+
+    .gb-primary:hover {
+      background: var(--green-dark);
+    }
+
+    .gb-line {
+      border: 1px solid var(--green);
+      background: #fff;
+      color: var(--green-dark);
+    }
+
+    .gb-line:hover {
+      background: #f3f8f7;
+    }
+
+    /* 팝업 안 고르기 칩 */
+    .gm-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .gm-chips button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 38px;
+      padding: 0 14px;
+      border: 1px solid #e3e6e5;
+      border-radius: 99px;
+      background: #fff;
+      font: inherit;
+      font-size: 14px;
+      color: #444;
+      cursor: pointer;
+    }
+
+    .gm-chips button:hover,
+    .gm-chips button.on {
+      border-color: var(--green);
+      color: var(--green-dark);
+      background: #f3f8f7;
+    }
+
+    .gm-chips svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .gm-quick {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .gm-quick button {
+      flex: 1;
+      height: 34px;
+      border: 1px solid #e3e6e5;
+      border-radius: 10px;
+      background: #fff;
+      font: inherit;
+      font-size: 13px;
+      color: #555;
+      cursor: pointer;
+    }
+
+    .gm-quick button:hover {
+      border-color: var(--green);
+      color: var(--green-dark);
+    }
+
+    .gm-err {
+      display: none;
+      margin-top: 8px;
+      font-size: 13px;
+      color: #d4574a;
+    }
+
+    .gm-err.show {
+      display: block;
+    }
+
+    .sal-toast {
+      position: fixed;
+      left: 50%;
+      bottom: 36px;
+      z-index: 120;
+      padding: 14px 22px;
+      border-radius: 999px;
+      background: #141414;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      white-space: nowrap;
+      transform: translate(-50%, 20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease, transform .25s ease;
+    }
+
+    .sal-toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .subgoals li { animation: none; }
+      .sg-bar i { transition: none; }
+    }
+
+    /* 자산 그래프 + 월별 금액 툴팁 */
+    .asset-chart {
+      position: relative;
+      width: 100%;
+      margin-top: 22px;
+    }
+
+    .asset-chart svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      cursor: crosshair;
+      touch-action: pan-y;
+      outline: none;
+    }
+
+    .asset-chart svg:focus-visible {
+      border-radius: 10px;
+      box-shadow: 0 0 0 2px var(--green-dark);
+    }
+
+    .ac-guide,
+    .ac-hit {
+      opacity: 0;
+      transition: opacity .15s ease;
+    }
+
+    .asset-chart.on .ac-guide,
+    .asset-chart.on .ac-hit {
+      opacity: 1;
+    }
+
+    .ac-tip {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 5;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: #141414;
+      color: #fff;
+      font-size: 13px;
+      line-height: 1.45;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, calc(-100% - 10px));
+      transition: opacity .15s ease;
+    }
+
+    .asset-chart.on .ac-tip {
+      opacity: 1;
+    }
+
+    .ac-tip .ac-up { color: #9fe1cb; }
+    .ac-tip .ac-down { color: #f5a99f; }
+
+    /* 선이 왼쪽에서 오른쪽으로 그려지는 효과 */
+    .ac-line {
+      clip-path: inset(0 100% 0 0);
+      animation: ac-draw 1.6s ease .8s forwards;
+    }
+
+    @keyframes ac-draw {
+      to { clip-path: inset(0 0 0 0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ac-line { animation: none; clip-path: none; }
+    }
+
+    /* 선택한 달의 점 (화면 크기와 상관없이 같은 크기) */
+    .ac-hit {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 10px;
+      height: 10px;
+      border: 2px solid #1a9d93;
+      border-radius: 50%;
+      background: #fff;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .ac-months {
+      position: relative;
+      height: 18px;
+      margin-top: 4px;
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    /* 각 글자를 그래프 점(2월·6월·10월) 바로 아래에 놓기 */
+    .ac-months span {
+      position: absolute;
+      top: 0;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    .ac-months span:nth-child(1) { left: 14%; }
+    .ac-months span:nth-child(2) { left: 50%; }
+    .ac-months span:nth-child(3) { left: auto; right: 0; transform: none; }
 
     .line {
       stroke-dasharray: 100;
@@ -762,7 +1070,7 @@
         align-items: flex-start;
       }
 
-      .asset svg {
+      .asset-chart {
         max-width: 100%;
         width: 100%;
       }
@@ -960,7 +1268,105 @@
         grid-template-columns: 1fr;
       }
     }
+  
+    /* ===== 로그인 후 프로필 버튼 (둥근 네모 아바타) ===== */
+    .nav-user { position: relative; }
+    .nav.is-in .nav-sep { display: none; }
+    .profile { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; margin-left: 4px;
+               padding: 0; border: 0; border-radius: 12px; background: var(--green-light); color: var(--green-dark);
+               overflow: hidden; cursor: pointer; transition: background .2s ease, box-shadow .2s ease, transform .2s ease; }
+    .profile:hover { background: #cfe2de; transform: translateY(-1px); }
+    .profile[aria-expanded="true"] { box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--green-dark); }
+    .profile:focus-visible { outline: 0; box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--green-dark); }
+    .pf-av { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 100%; height: 100%;
+             overflow: hidden; border-radius: 12px; background: var(--green-light); color: var(--green-dark); }
+    .pf-av svg { width: 22px; height: 22px; fill: currentColor; }
+    .pf-av img { width: 100%; height: 100%; object-fit: cover; }
+    .pf-menu { position: absolute; top: calc(100% + 12px); right: 0; z-index: 30; width: 240px; padding: 8px;
+               background: #fff; border: 1px solid #ececec; border-radius: 20px;
+               box-shadow: 0 24px 48px -16px rgba(20,60,55,.28); animation: pf-pop .18s ease; }
+    .pf-menu[hidden] { display: none; }
+    @keyframes pf-pop { from { opacity: 0; transform: translateY(-6px); } }
+    .pf-head { display: flex; align-items: center; gap: 12px; padding: 10px 10px 12px; border-bottom: 1px solid #f0f0f0; margin-bottom: 6px; }
+    .pf-head .pf-av { width: 40px; height: 40px; }
+    .pf-head b { display: block; font-size: 15px; color: #141414; }
+    .pf-head small { font-size: 12px; color: #999; }
+    .pf-menu a, .pf-menu button.pf-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 11px 10px;
+               border: 0; border-radius: 12px; background: none; font: inherit; font-size: 14px; color: #333; text-align: left; cursor: pointer; }
+    .pf-menu a:hover, .pf-menu button.pf-item:hover { background: #f3f7f6; }
+    .pf-menu svg { width: 18px; height: 18px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.8;
+                   stroke-linecap: round; stroke-linejoin: round; color: var(--green-dark); }
+    .pf-menu .pf-out, .pf-menu .pf-out svg { color: #d4574a; }
+    @media (max-width: 768px) {
+      .profile { width: 34px; height: 34px; border-radius: 11px; }
+      .pf-menu { position: fixed; top: 68px; right: 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) { .profile, .pf-menu { transition: none; animation: none; } }
+    /* ===== 한 화면에 다 보이게 (데스크톱) ===== */
+    .asset-chart svg { height: 130px; }
+
+    @media (min-width: 1101px) {
+      /* 화면 높이에 꽉 차게: 위아래 두 줄이 남은 높이를 반씩 나눠 가져요 */
+      .wrap {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 61px);
+        min-height: 600px;
+        max-width: 1480px;
+        padding: clamp(12px, 2.6vh, 36px) 40px;
+      }
+      .grid {
+        flex: 1;
+        min-height: 0;
+        grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+        gap: clamp(12px, 2vh, 32px) 28px;
+      }
+      .card {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        padding: clamp(16px, 2.8vh, 34px) clamp(26px, 2.4vw, 40px);
+        border-radius: 26px;
+      }
+      .card h2 { font-size: clamp(19px, 2.4vh, 24px); }
+
+      /* 지출 현황: 도넛이 카드 높이에 맞춰 커져요 */
+      .spend { flex: 1; min-height: 0; margin-top: 8px; gap: 28px; }
+      .donut { width: clamp(140px, 26vh, 270px); height: clamp(140px, 26vh, 270px); }
+      .donut-center { font-size: clamp(13px, 1.6vh, 16px); }
+      .donut-center b { font-size: clamp(15px, 2.1vh, 21px); }
+      .legend li { padding: clamp(6px, 1.3vh, 14px) 0; font-size: clamp(15px, 1.9vh, 19px); }
+
+      /* 최근 거래: 줄 간격을 고르게 벌려요 */
+      .tx { flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; margin-top: 6px; }
+      .tx.open { justify-content: flex-start; }
+      .tx li { padding: clamp(4px, 1vh, 12px) 0; font-size: clamp(15px, 1.9vh, 19px); gap: 14px; }
+      .tx .ico { width: clamp(30px, 4.4vh, 46px); height: clamp(30px, 4.4vh, 46px); }
+      .tx .ico svg { width: clamp(17px, 2.4vh, 24px); height: clamp(17px, 2.4vh, 24px); }
+
+      /* 이번 달 목표 */
+      .goal { margin-top: clamp(4px, 1.4vh, 20px); gap: 18px; }
+      .goal-ico { width: clamp(34px, 5.2vh, 54px); height: clamp(34px, 5.2vh, 54px); }
+      .goal-title, .goal-sub { font-size: clamp(15px, 1.9vh, 19px); }
+      .goal-sub { margin-top: 2px; }
+      .goal-bar { margin-top: clamp(8px, 1.3vh, 14px); }
+      .bar { height: clamp(10px, 1.4vh, 15px); }
+      .subgoals { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: clamp(5px, 1.1vh, 12px); margin-top: clamp(6px, 1.3vh, 18px); }
+      .subgoals li { margin-top: 0; padding: clamp(5px, 1.2vh, 14px) 16px; border-radius: 14px; }
+      .sg-top { font-size: clamp(14px, 1.8vh, 17px); }
+      .sg-bar { margin-top: clamp(6px, 1vh, 10px); height: clamp(5px, .8vh, 8px); }
+      .goal-btns { margin-top: clamp(6px, 1.3vh, 18px); }
+      .goal-btns button { height: clamp(34px, 5vh, 52px); font-size: clamp(14px, 1.8vh, 16px); }
+
+      /* 자산 현황: 그래프가 카드의 남은 높이를 채워요 */
+      .asset { flex: 1; min-height: 0; display: flex; flex-direction: column; margin-top: clamp(6px, 1.2vh, 14px); }
+      .asset-label { font-size: clamp(15px, 1.9vh, 18px); }
+      .asset-total { font-size: clamp(26px, 4.2vh, 42px); }
+      .asset-chart { flex: 1; min-height: 0; display: flex; flex-direction: column; margin-top: clamp(6px, 1.4vh, 16px); }
+      .asset-chart svg { flex: 1; height: auto; min-height: 60px; }
+    }
   </style>
+
 </head>
 
 <body>
@@ -1007,12 +1413,21 @@
 
       <span class="nav-sep"></span>
 
-      <button type="button" class="profile" aria-label="내 프로필">
-        <svg viewBox="0 0 24 24">
-          <circle cx="12" cy="8.5" r="4.2"/>
-          <path d="M3.5 22c1.2-4.6 4.6-7.2 8.5-7.2s7.3 2.6 8.5 7.2z"/>
-        </svg>
+      <button type="button" class="profile" aria-label="내 프로필 메뉴" aria-haspopup="menu" aria-expanded="false">
+        <span class="pf-av">
+          <!-- 실제 사진이 있으면 아래 svg 대신 <img src="사진주소" alt=""> 를 넣으세요 -->
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4.2"/><path d="M3.5 22c1.2-4.6 4.6-7.2 8.5-7.2s7.3 2.6 8.5 7.2z"/></svg>
+        </span>
       </button>
+      <div class="pf-menu" id="pfMenu" role="menu" hidden>
+        <div class="pf-head">
+          <span class="pf-av"><svg viewBox="0 0 24 24" style="fill:currentColor;stroke:none"><circle cx="12" cy="8.5" r="4.2"/><path d="M3.5 22c1.2-4.6 4.6-7.2 8.5-7.2s7.3 2.6 8.5 7.2z"/></svg></span>
+          <span><b class="pf-user">김여유</b><small class="pf-mail">yeoyu@mail.com</small></span>
+        </div>
+        <a href="#" role="menuitem"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6"/></svg>내 정보</a>
+        <a href="./salary.html" role="menuitem"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>월급 · 알림 설정</a>
+        <button type="button" class="pf-item pf-out" role="menuitem"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>로그아웃</button>
+      </div>
 
       <a href="./login.html" class="login-btn">로그인</a>
     </div>
@@ -1338,6 +1753,14 @@
             </div>
           </div>
         </div>
+
+        <!-- 다른 목표들 (C안) -->
+        <ul class="subgoals" id="subgoals"></ul>
+
+        <div class="goal-btns">
+          <button type="button" class="gb-primary" id="saveNowBtn">+ 지금 모으기</button>
+          <button type="button" class="gb-line" id="addGoalBtn">목표 추가</button>
+        </div>
       </section>
 
 
@@ -1346,68 +1769,29 @@
         <h2>자산 현황</h2>
 
         <div class="asset">
-          <div>
-            <p class="asset-label">총 자산</p>
+          <p class="asset-label">총 자산</p>
+          <p class="asset-total" data-count="15500000">15,500,000원</p>
 
-            <p
-              class="asset-total"
-              data-count="15500000">
-              15,500,000원
-            </p>
-          </div>
-
-          <svg viewBox="-8 -8 236 96" fill="none">
-            <defs>
-              <linearGradient
-                id="fill"
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="1">
-
-                <stop
-                  offset="0"
-                  stop-color="#2aa59b"
-                  stop-opacity=".45"/>
-
-                <stop
-                  offset="1"
-                  stop-color="#2aa59b"
-                  stop-opacity="0"/>
-              </linearGradient>
-            </defs>
-
-            <path
-              class="area"
-              d="M2 70 L32 62 L62 60 L82 46 L102 52 L122 42 L142 48 L162 28 L182 16 L182 80 L2 80 Z"
-              fill="url(#fill)"/>
-
+          <div class="asset-chart" id="assetChart">
+          <svg viewBox="0 0 200 64" preserveAspectRatio="none" fill="none" id="assetSvg" tabindex="0" role="img"
+               aria-label="월별 총 자산 그래프. 마우스를 올리거나 좌우 방향키로 월별 금액을 볼 수 있어요">
             <polyline
-              class="line"
-              pathLength="100"
-              points="2,70 32,62 62,60 82,46 102,52 122,42 142,48 162,28 182,16"
+              class="ac-line"
+              points="4,54 28,47.2 52,45.4 76,33.6 100,38.6 124,30.2 148,30.8 172,21.6 196,8"
               stroke="#1a9d93"
               stroke-width="2"
               stroke-linejoin="round"
-              stroke-linecap="round"/>
+              stroke-linecap="round"
+              vector-effect="non-scaling-stroke"/>
 
-            <g
-              class="dots"
-              fill="#fff"
-              stroke="#1a9d93"
-              stroke-width="2">
-
-              <circle cx="2" cy="70" r="3"/>
-              <circle cx="32" cy="62" r="3"/>
-              <circle cx="62" cy="60" r="3"/>
-              <circle cx="82" cy="46" r="3"/>
-              <circle cx="102" cy="52" r="3"/>
-              <circle cx="122" cy="42" r="3"/>
-              <circle cx="142" cy="48" r="3"/>
-              <circle cx="162" cy="28" r="3"/>
-              <circle cx="182" cy="16" r="3"/>
-            </g>
+            <!-- 마우스를 올린 달 표시 -->
+            <line class="ac-guide" id="acGuide" x1="196" y1="8" x2="196" y2="64"
+                  stroke="#cfe2de" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>
           </svg>
+          <span class="ac-hit" id="acHit"></span>
+          <div class="ac-tip" id="acTip" aria-live="polite"></div>
+          <div class="ac-months"><span>3월</span><span>6월</span><span>10월</span></div>
+          </div>
         </div>
       </section>
 
@@ -2482,6 +2866,85 @@
       );
     })();
   </script>
+  <!-- 자산 그래프 월별 금액 툴팁 -->
+  <script>
+    (function () {
+      /* 그래프 점 9개 = 2월 ~ 10월 (마지막이 이번 달 총 자산) */
+      var DATA = [
+        { m: '2월',  v: 13200000, x: 4,   y: 54 },
+        { m: '3월',  v: 13540000, x: 28,  y: 47.2 },
+        { m: '4월',  v: 13630000, x: 52,  y: 45.4 },
+        { m: '5월',  v: 14220000, x: 76,  y: 33.6 },
+        { m: '6월',  v: 13970000, x: 100, y: 38.6 },
+        { m: '7월',  v: 14390000, x: 124, y: 30.2 },
+        { m: '8월',  v: 14360000, x: 148, y: 30.8 },
+        { m: '9월',  v: 14820000, x: 172, y: 21.6 },
+        { m: '10월', v: 15500000, x: 196, y: 8 }
+      ];
+
+      var wrap = document.getElementById('assetChart');
+      var svg = document.getElementById('assetSvg');
+      var tip = document.getElementById('acTip');
+      var guide = document.getElementById('acGuide');
+      var hit = document.getElementById('acHit');
+      if (!wrap || !svg) return;
+
+      var VB = { x: 0, y: 0, w: 200, h: 64 };
+      var cur = DATA.length - 1;
+
+      function won(n) { return n.toLocaleString('ko-KR') + '원'; }
+
+      function show(i) {
+        cur = i;
+        var d = DATA[i];
+        guide.setAttribute('x1', d.x); guide.setAttribute('x2', d.x); guide.setAttribute('y1', d.y);
+
+        var diff = i > 0 ? d.v - DATA[i - 1].v : null;
+        tip.innerHTML = d.m + ' · ' + won(d.v) + '<br>' +
+          (diff === null ? '<span style="color:#bbb">첫 기록</span>'
+            : '<span class="' + (diff >= 0 ? 'ac-up' : 'ac-down') + '">' +
+              (diff >= 0 ? '+' : '−') + won(Math.abs(diff)) + '</span>');
+
+        /* 점 위치를 화면 좌표로 바꿔 툴팁 놓기 (양 끝에서는 안쪽으로 밀기) */
+        var box = svg.getBoundingClientRect();
+        var px = (d.x - VB.x) / VB.w * box.width;
+        var py = (d.y - VB.y) / VB.h * box.height;
+        wrap.classList.add('on');
+        var half = tip.offsetWidth / 2;
+        var left = Math.min(Math.max(px, half), box.width - half);
+        tip.style.left = left + 'px';
+        tip.style.top = py + 'px';
+        hit.style.left = px + 'px';
+        hit.style.top = py + 'px';
+      }
+
+      function hide() { wrap.classList.remove('on'); }
+
+      function nearest(clientX) {
+        var box = svg.getBoundingClientRect();
+        var x = VB.x + (clientX - box.left) / box.width * VB.w;
+        var best = 0;
+        DATA.forEach(function (d, i) { if (Math.abs(d.x - x) < Math.abs(DATA[best].x - x)) best = i; });
+        return best;
+      }
+
+      svg.addEventListener('pointermove', function (e) { show(nearest(e.clientX)); });
+      svg.addEventListener('pointerdown', function (e) { show(nearest(e.clientX)); });
+      svg.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') hide(); });
+      document.addEventListener('pointerdown', function (e) { if (!wrap.contains(e.target)) hide(); });
+
+      /* 키보드: 탭으로 들어와서 좌우 방향키로 이동 */
+      svg.addEventListener('focus', function () { show(cur); });
+      svg.addEventListener('blur', hide);
+      svg.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowLeft' && cur > 0) { e.preventDefault(); show(cur - 1); }
+        if (e.key === 'ArrowRight' && cur < DATA.length - 1) { e.preventDefault(); show(cur + 1); }
+        if (e.key === 'Escape') { hide(); svg.blur(); }
+      });
+      window.addEventListener('resize', function () { if (wrap.classList.contains('on')) show(cur); });
+    })();
+  </script>
+
   <!-- 목표 관리 팝업 -->
   <div
     class="goal-modal"
@@ -2607,6 +3070,281 @@
     </div>
   </div>
 
+
+  <!-- 지금 모으기 팝업 -->
+  <div class="goal-modal" id="saveNowModal" hidden>
+    <div class="goal-modal-box" role="dialog" aria-modal="true" aria-labelledby="saveNowTitle">
+      <div class="gm-head">
+        <h3 id="saveNowTitle">지금 모으기</h3>
+        <button type="button" class="gm-close" data-close aria-label="닫기">×</button>
+      </div>
+
+      <span class="gm-label">어디에 모을까요?</span>
+      <div class="gm-chips" id="saveNowTargets"></div>
+
+      <label class="gm-label" for="saveNowAmt">모을 금액</label>
+      <input class="gm-input" id="saveNowAmt" type="text" inputmode="numeric" placeholder="0원" autocomplete="off">
+      <div class="gm-quick" id="saveNowQuick">
+        <button type="button" data-v="10000">+1만</button>
+        <button type="button" data-v="50000">+5만</button>
+        <button type="button" data-v="100000">+10만</button>
+        <button type="button" data-v="0">남은 만큼</button>
+      </div>
+      <p class="gm-err" id="saveNowErr">모을 금액을 입력해 주세요.</p>
+
+      <div class="gm-preview">
+        <div class="gm-preview-top">
+          <strong id="saveNowText">-</strong>
+          <span id="saveNowPct">0%</span>
+        </div>
+        <div class="gm-progress"><i id="saveNowBar" style="width:0"></i></div>
+      </div>
+
+      <div class="gm-actions">
+        <button type="button" class="gm-cancel" data-close>취소</button>
+        <button type="button" class="gm-save" id="saveNowOk">모으기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 목표 추가 팝업 -->
+  <div class="goal-modal" id="addGoalModal" hidden>
+    <div class="goal-modal-box" role="dialog" aria-modal="true" aria-labelledby="addGoalTitle">
+      <div class="gm-head">
+        <h3 id="addGoalTitle">목표 추가</h3>
+        <button type="button" class="gm-close" data-close aria-label="닫기">×</button>
+      </div>
+
+      <span class="gm-label">종류</span>
+      <div class="gm-chips" id="addGoalIcons"></div>
+
+      <label class="gm-label" for="addGoalName">목표 이름</label>
+      <input class="gm-input" id="addGoalName" type="text" maxlength="14" placeholder="예: 새 노트북" autocomplete="off">
+
+      <div class="gm-row">
+        <div>
+          <label class="gm-label" for="addGoalTarget">목표 금액</label>
+          <input class="gm-input" id="addGoalTarget" type="text" inputmode="numeric" placeholder="0원" autocomplete="off">
+        </div>
+        <div>
+          <label class="gm-label" for="addGoalCurrent">지금까지 모은 돈</label>
+          <input class="gm-input" id="addGoalCurrent" type="text" inputmode="numeric" placeholder="0원" autocomplete="off">
+        </div>
+      </div>
+      <p class="gm-err" id="addGoalErr">이름과 목표 금액을 입력해 주세요.</p>
+
+      <div class="gm-actions">
+        <button type="button" class="gm-cancel" data-close>취소</button>
+        <button type="button" class="gm-save" id="addGoalOk">추가하기</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sal-toast" id="salToast" role="status"></div>
+
+  <!-- 이번 달 목표: 다른 목표 · 지금 모으기 · 목표 추가 -->
+  <script>
+    (function () {
+      var ICONS = {
+        plane:  { n: '여행',   p: '<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>' },
+        shield: { n: '비상금', p: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>' },
+        gift:   { n: '선물',   p: '<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/>' },
+        device: { n: '전자기기', p: '<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>' },
+        star:   { n: '기타',   p: '<path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/>' }
+      };
+      function icon(k) { return '<svg viewBox="0 0 24 24">' + ICONS[k].p + '</svg>'; }
+
+      var goals = [
+        { n: '제주 여행', i: 'plane',  t: 500000,  c: 360000 },
+        { n: '비상금',    i: 'shield', t: 1000000, c: 150000 }
+      ];
+
+      var list = document.getElementById('subgoals');
+      var toast = document.getElementById('salToast');
+      var mainName = document.getElementById('goalName');
+      var mainTarget = document.getElementById('goalTarget');
+      var mainCurrent = document.getElementById('goalCurrent');
+
+      function num(s) { return parseInt(String(s).replace(/[^0-9]/g, ''), 10) || 0; }
+      function won(n) { return Math.round(n).toLocaleString('ko-KR') + '원'; }
+      function pct(c, t) { return t > 0 ? Math.min(c / t * 100, 100) : 0; }
+      function pctText(p) { return p >= 100 ? '달성!' : Math.round(p) + '%'; }
+      function moneyField(el) {
+        el.addEventListener('input', function () {
+          var v = num(el.value);
+          el.value = v ? v.toLocaleString('ko-KR') : '';
+        });
+      }
+
+      /* ---------- 목록 그리기 ---------- */
+      function render() {
+        list.innerHTML = '';
+        goals.forEach(function (g, idx) {
+          var p = pct(g.c, g.t);
+          var li = document.createElement('li');
+          li.style.animationDelay = (0.5 + idx * 0.08) + 's';
+          li.title = won(g.c) + ' / ' + won(g.t);
+          li.innerHTML =
+            '<div class="sg-top">' +
+              '<span class="sg-name">' + icon(g.i) + '<span></span></span>' +
+              '<span class="sg-pct' + (p >= 100 ? ' done' : '') + '">' + pctText(p) + '</span>' +
+            '</div>' +
+            '<div class="sg-bar"><i></i></div>';
+          li.querySelector('.sg-name span').textContent = g.n;
+          list.appendChild(li);
+          var bar = li.querySelector('.sg-bar i');
+          requestAnimationFrame(function () { requestAnimationFrame(function () { bar.style.width = p + '%'; }); });
+        });
+      }
+
+      /* ---------- 팝업 공통 ---------- */
+      var lastBtn = null;
+      function openModal(m, btn) {
+        lastBtn = btn;
+        m.hidden = false;
+        document.body.style.overflow = 'hidden';
+        var first = m.querySelector('input');
+        setTimeout(function () { if (first) first.focus(); }, 30);
+      }
+      function closeModal(m) {
+        m.hidden = true;
+        document.body.style.overflow = '';
+        if (lastBtn) lastBtn.focus();
+      }
+      document.querySelectorAll('#saveNowModal, #addGoalModal').forEach(function (m) {
+        m.addEventListener('click', function (e) {
+          if (e.target === m || e.target.closest('[data-close]')) closeModal(m);
+        });
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        document.querySelectorAll('#saveNowModal, #addGoalModal').forEach(function (m) { if (!m.hidden) closeModal(m); });
+      });
+
+      /* ---------- 지금 모으기 ---------- */
+      var snModal = document.getElementById('saveNowModal');
+      var snTargets = document.getElementById('saveNowTargets');
+      var snAmt = document.getElementById('saveNowAmt');
+      var snErr = document.getElementById('saveNowErr');
+      var sel = 'main';
+
+      function targetOf(key) {
+        if (key === 'main') {
+          return { n: mainName.value.trim() || '저축 목표', t: num(mainTarget.value), c: num(mainCurrent.value) };
+        }
+        return goals[+key];
+      }
+      function snPreview() {
+        var g = targetOf(sel), add = num(snAmt.value);
+        var after = g.c + add, p = pct(after, g.t);
+        document.getElementById('saveNowText').textContent = won(after) + ' / ' + won(g.t);
+        document.getElementById('saveNowPct').textContent = p.toFixed(1) + '%';
+        document.getElementById('saveNowBar').style.width = p + '%';
+      }
+      function snChips() {
+        var html = '<button type="button" data-k="main">' + icon('star') + '<span></span></button>';
+        goals.forEach(function (g, i) { html += '<button type="button" data-k="' + i + '">' + icon(g.i) + '<span></span></button>'; });
+        snTargets.innerHTML = html;
+        var btns = snTargets.querySelectorAll('button');
+        btns[0].querySelector('span').textContent = targetOf('main').n;
+        goals.forEach(function (g, i) { btns[i + 1].querySelector('span').textContent = g.n; });
+        btns.forEach(function (b) { b.classList.toggle('on', b.dataset.k === sel); });
+      }
+      snTargets.addEventListener('click', function (e) {
+        var b = e.target.closest('button'); if (!b) return;
+        sel = b.dataset.k;
+        snTargets.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+        snPreview();
+      });
+      moneyField(snAmt);
+      snAmt.addEventListener('input', function () { snErr.classList.remove('show'); snPreview(); });
+      document.getElementById('saveNowQuick').addEventListener('click', function (e) {
+        var b = e.target.closest('button'); if (!b) return;
+        var g = targetOf(sel);
+        var v = +b.dataset.v === 0 ? Math.max(g.t - g.c, 0) : num(snAmt.value) + (+b.dataset.v);
+        snAmt.value = v ? v.toLocaleString('ko-KR') : '';
+        snErr.classList.remove('show');
+        snPreview();
+      });
+      document.getElementById('saveNowBtn').addEventListener('click', function () {
+        sel = 'main'; snAmt.value = ''; snErr.classList.remove('show');
+        snChips(); snPreview(); openModal(snModal, this);
+      });
+      document.getElementById('saveNowOk').addEventListener('click', function () {
+        var add = num(snAmt.value);
+        if (!add) { snErr.classList.add('show'); snAmt.focus(); return; }
+        var g = targetOf(sel);
+        if (sel === 'main') {
+          /* 기존 '목표 관리' 저장 기능을 그대로 써서 위쪽 저축 목표를 바꿔요 */
+          mainCurrent.value = g.c + add;
+          document.getElementById('goalSave').click();
+        } else {
+          goals[+sel].c += add;
+          render();
+        }
+        closeModal(snModal);
+        var after = g.c + add;
+        showToast(g.n + '에 ' + won(add) + ' 모았어요' + (after >= g.t && g.t ? ' · 목표 달성!' : ''));
+      });
+
+      /* ---------- 목표 추가 ---------- */
+      var agModal = document.getElementById('addGoalModal');
+      var agIcons = document.getElementById('addGoalIcons');
+      var agName = document.getElementById('addGoalName');
+      var agTarget = document.getElementById('addGoalTarget');
+      var agCurrent = document.getElementById('addGoalCurrent');
+      var agErr = document.getElementById('addGoalErr');
+      var agIcon = 'plane';
+
+      agIcons.innerHTML = Object.keys(ICONS).map(function (k) {
+        return '<button type="button" data-k="' + k + '">' + icon(k) + ICONS[k].n + '</button>';
+      }).join('');
+      agIcons.addEventListener('click', function (e) {
+        var b = e.target.closest('button'); if (!b) return;
+        agIcon = b.dataset.k;
+        agIcons.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+        if (!agName.value.trim() && agIcon !== 'star') agName.placeholder = '예: ' + ICONS[agIcon].n + ' 자금';
+      });
+      moneyField(agTarget);
+      moneyField(agCurrent);
+      [agName, agTarget].forEach(function (el) { el.addEventListener('input', function () { agErr.classList.remove('show'); }); });
+
+      document.getElementById('addGoalBtn').addEventListener('click', function () {
+        agName.value = ''; agTarget.value = ''; agCurrent.value = ''; agErr.classList.remove('show');
+        agIcon = 'plane';
+        agIcons.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x.dataset.k === agIcon); });
+        openModal(agModal, this);
+      });
+      document.getElementById('addGoalOk').addEventListener('click', function () {
+        var n = agName.value.trim(), t = num(agTarget.value), c = num(agCurrent.value);
+        if (!n || !t) {
+          agErr.textContent = '이름과 목표 금액을 입력해 주세요.';
+          agErr.classList.add('show');
+          (n ? agTarget : agName).focus();
+          return;
+        }
+        if (goals.length >= 4) {
+          agErr.textContent = '목표는 4개까지 둘 수 있어요.';
+          agErr.classList.add('show');
+          return;
+        }
+        goals.push({ n: n, i: agIcon, t: t, c: c });
+        render();
+        closeModal(agModal);
+        showToast(n + ' 목표를 추가했어요');
+      });
+
+      var tId;
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(tId);
+        tId = setTimeout(function () { toast.classList.remove('show'); }, 1800);
+      }
+
+      render();
+    })();
+  </script>
 
   <!-- 목표 관리 JavaScript -->
   <script id="goal-manage-script">
@@ -2861,5 +3599,43 @@
             e.key === 'Escape' &&
             !modal.hidden) {closeModal();}});})();
   </script>
+  <script>
+    /* ===== 프로필 버튼: 이름 넣기 · 누르면 메뉴 · 로그아웃 ===== */
+    (function () {
+      var nav = document.querySelector('.nav');
+      var btn = document.querySelector('.profile');
+      var menu = document.getElementById('pfMenu');
+      if (!btn || !menu) return;
+      var name = '김여유', mail = 'yeoyu@mail.com';
+      try {
+        name = localStorage.getItem('wolyeoyu-name') || sessionStorage.getItem('wolyeoyu-name') || name;
+        mail = localStorage.getItem('wolyeoyu-mail') || sessionStorage.getItem('wolyeoyu-mail') || mail;
+      } catch (e) {}
+      menu.querySelector('.pf-user').textContent = name;
+      menu.querySelector('.pf-mail').textContent = mail;
+
+      function setOpen(v) { menu.hidden = !v; btn.setAttribute('aria-expanded', v ? 'true' : 'false'); }
+      btn.addEventListener('click', function () { setOpen(menu.hidden); });
+      /* 바깥을 누르면 닫기 (알림 종·검색을 눌러도 닫힘) */
+      document.addEventListener('click', function (e) {
+        if (!menu.hidden && !btn.contains(e.target) && !menu.contains(e.target)) setOpen(false);
+      }, true);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !menu.hidden) { setOpen(false); btn.focus(); }
+      });
+
+      menu.querySelector('.pf-out').addEventListener('click', function () {
+        try {
+          ['wolyeoyu-login', 'wolyeoyu-name', 'wolyeoyu-mail'].forEach(function (k) {
+            localStorage.removeItem(k); sessionStorage.removeItem(k);
+          });
+        } catch (e) {}
+        setOpen(false);
+        nav.classList.remove('is-in');
+        nav.classList.add('is-out');
+      });
+    })();
+  </script>
+
 </body>
 </html>
