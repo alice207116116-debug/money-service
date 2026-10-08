@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>홈 | 월여유</title>
+  <title>소개 | 월여유</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <style>
     :root {
@@ -13,13 +13,12 @@
       --green-light: #dce8e5;
       --teal: #0f8a84;
       --bg: #f4f4f4;
-      --line: #e6e6e6;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Pretendard', sans-serif; background: var(--bg); color: #222;
-           -webkit-font-smoothing: antialiased; }
+    body { font-family: 'Pretendard', sans-serif; background: var(--bg); color: #222; }
     a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; }
 
     /* ===== 상단 바 (화이트 미니멀) ===== */
     .nav { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; height: 60px;
@@ -32,6 +31,7 @@
                  color: #141414; margin-right: 44px; white-space: nowrap; }
     .logo { display: flex; flex-shrink: 0; }
     .logo svg { width: 12px; height: 30px; }
+    a.nav-title { transition: opacity .2s ease; }
 
     .nav-menu { display: flex; gap: 8px; flex: 1; align-self: stretch; }
     .nav-menu a { position: relative; display: flex; align-items: center; padding: 0 14px; font-size: 14px;
@@ -43,118 +43,19 @@
     .nav-menu a:hover::after, .nav-menu a.active::after { transform: scaleX(1); }
     .nav-menu a.active { color: var(--green-dark); font-weight: 600; }
 
-    /* 사용자 영역: 검색 · 알림 + 프로필 사진 */
+    /* 사용자 영역: 프로필 사진 (이 페이지에는 알림 없음) */
     .nav-user { display: flex; align-items: center; gap: 6px; }
-    .ib { position: relative; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;
-          border: 0; border-radius: 50%; background: none; color: #555; cursor: pointer; transition: background .2s ease, color .2s ease; }
-    .ib:hover { background: #f2f5f4; color: var(--green-dark); }
-    .ib svg { width: 21px; height: 21px; }
-    .ib .dot { position: absolute; top: 9px; right: 10px; width: 7px; height: 7px; border-radius: 50%;
-               background: #e0604f; box-shadow: 0 0 0 2px #fff; }
-    .nav-sep { width: 1px; height: 22px; margin: 0 8px; background: #e6e6e6; }
     .login-btn { display: none; align-items: center; height: 38px; padding: 0 18px; border: 1.5px solid #dfe4e2; border-radius: 999px;
                  font-size: 14px; font-weight: 600; color: #222; white-space: nowrap; transition: border-color .2s ease, color .2s ease; }
     .login-btn:hover { border-color: var(--green-dark); color: var(--green-dark); }
     .nav.is-out .login-btn { display: inline-flex; }
-    .nav.is-out .ib[aria-label="알림"], .nav.is-out .profile { display: none; }
+    .nav.is-out .profile { display: none; }  /* 로그인 전: 프로필 숨김 */
 
-    /* ===== 본문 ===== */
-    .home { max-width: 1000px; margin: 0 auto; padding: 88px 24px 100px;
-            display: flex; flex-direction: column; align-items: center; text-align: center; }
-
-    .label { font-size: 22px; color: #555; }
-    .amount { margin-top: 18px; font-size: 136px; font-weight: 700; letter-spacing: -4px; line-height: 1;
-              color: var(--green-dark); font-variant-numeric: tabular-nums; white-space: nowrap; }
-    .hint { margin-top: 24px; font-size: 19px; color: #888; }
-
-    /* 다음 결제 */
-    .next { display: flex; align-items: center; gap: 16px; width: 100%; max-width: 720px; margin-top: 56px;
-            padding: 28px 32px; background: #fff; border: 1px solid var(--line); border-radius: 24px;
-            text-align: left; transition: border-color .2s ease, box-shadow .2s ease; }
-    .next:hover { border-color: var(--green-mid); box-shadow: 0 8px 24px rgba(46,125,114,.08); }
-    .next svg { width: 28px; height: 28px; flex-shrink: 0; color: var(--green-dark); }
-    .next .what { flex: 1; min-width: 0; font-size: 20px; color: #333; }
-    .next .money { font-size: 22px; font-weight: 700; white-space: nowrap; }
-
-
-    /* 하단 2열 */
-    .cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; width: 100%;
-            margin-top: 72px; text-align: left; }
-    .panel { min-width: 0; padding: 32px 34px; background: #fff; border: 1px solid var(--line); border-radius: 24px; }
-    .panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-    .panel h2 { font-size: 21px; font-weight: 700; }
-    .panel-head span { font-size: 15px; color: #888; white-space: nowrap; }
-    .panel-head span b { color: var(--green-dark); font-weight: 600; }
-
-    /* 이번 주 지출 막대 */
-    .week { position: relative; display: flex; align-items: flex-end; gap: 14px; height: 170px; margin-top: 30px;
-            padding-bottom: 30px; }
-    .limit { position: absolute; left: 0; right: 0; border-top: 1.5px dashed #b9cfcb; }
-    .limit em { position: absolute; right: 0; top: -22px; font-style: normal; font-size: 12px; color: #8aa9a4; }
-    .day { position: relative; flex: 1; height: 100%; display: flex; align-items: flex-end; justify-content: center; }
-    .day i { display: block; width: 100%; max-width: 34px; border-radius: 8px 8px 4px 4px; background: var(--green-mid);
-             transform-origin: bottom; transform: scaleY(0); animation: grow .8s cubic-bezier(.2,.7,.2,1) forwards; }
-    .day i.over { background: #e08a7e; }
-    .day i.today { background: var(--green-dark); }
-    .day i.empty { height: 6px !important; background: #ececec; }
-    .day span { position: absolute; bottom: -28px; font-size: 14px; color: #999; }
-    .day.on span { color: var(--green-dark); font-weight: 700; }
-    @keyframes grow { to { transform: scaleY(1); } }
-
-    /* 최근 거래 */
-    .tx { list-style: none; margin-top: 18px; }
-    .tx li { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid #f0f0f0; }
-    .tx li:last-child { border-bottom: 0; padding-bottom: 0; }
-    .tx .ico { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px;
-               border-radius: 50%; background: #d4ecea; flex-shrink: 0; }
-    .tx .ico svg { width: 22px; height: 22px; stroke: var(--teal); fill: none; stroke-width: 2;
-                   stroke-linecap: round; stroke-linejoin: round; }
-    .tx .name { flex: 1; min-width: 0; font-size: 17px; }
-    .tx .name small { display: block; margin-top: 2px; font-size: 13px; color: #999; }
-    .tx .money { font-size: 17px; font-weight: 600; white-space: nowrap; }
-
-    .up { opacity: 0; transform: translateY(14px); animation: up .7s cubic-bezier(.2,.7,.2,1) forwards; }
-    @keyframes up { to { opacity: 1; transform: none; } }
-
-    @media (prefers-reduced-motion: reduce) {
-      .nav, .up { animation: none; opacity: 1; transform: none; }
-      .day i { animation: none; transform: none; }
-      .nav-menu a, .nav-menu a::after, .ib, .profile, .next { transition: none; }
-    }
-
-    @media (max-width: 860px) {
-      .cols { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 768px) {
-      .nav { padding: 0 16px; }
-      .nav-title { margin-right: 12px; }
-      .nav-name { display: none; }
-      .ib[aria-label="검색"], .nav-sep { display: none; }
-      .logo svg { width: 11px; height: 28px; }
-      .nav-menu { gap: 0; overflow-x: auto; }
-      .nav-menu a { padding: 0 8px; font-size: 13px; }
-      .nav-menu a::after { left: 8px; right: 8px; }
-      .profile { width: 34px; height: 34px; }
-      .home { padding: 52px 16px 72px; }
-      .label { font-size: 18px; }
-      .amount { font-size: 76px; letter-spacing: -2.5px; }
-      .hint { font-size: 16px; }
-      .next { margin-top: 40px; padding: 22px 20px; gap: 12px; border-radius: 20px; }
-      .next svg { width: 24px; height: 24px; }
-      .next .what { font-size: 16px; }
-      .next .money { font-size: 18px; }
-      .cols { margin-top: 48px; gap: 16px; }
-      .panel { padding: 26px 22px; border-radius: 20px; }
-      .week { gap: 8px; }
-    }
-  
-    /* ===== 로그인 후 프로필 버튼 (둥근 네모 아바타) ===== */
+    /* 로그인 후 프로필 버튼 (둥근 네모 아바타) */
     .nav-user { position: relative; }
-    .nav.is-in .nav-sep { display: none; }
-    .profile { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; margin-left: 4px;
+    .profile { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px;
                padding: 0; border: 0; border-radius: 12px; background: var(--green-light); color: var(--green-dark);
-               overflow: hidden; cursor: pointer; transition: background .2s ease, box-shadow .2s ease, transform .2s ease; }
+               overflow: hidden; transition: background .2s ease, box-shadow .2s ease, transform .2s ease; }
     .profile:hover { background: #cfe2de; transform: translateY(-1px); }
     .profile[aria-expanded="true"] { box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--green-dark); }
     .profile:focus-visible { outline: 0; box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--green-dark); }
@@ -162,37 +63,157 @@
              overflow: hidden; border-radius: 12px; background: var(--green-light); color: var(--green-dark); }
     .pf-av svg { width: 22px; height: 22px; fill: currentColor; }
     .pf-av img { width: 100%; height: 100%; object-fit: cover; }
+
     .pf-menu { position: absolute; top: calc(100% + 12px); right: 0; z-index: 30; width: 240px; padding: 8px;
                background: #fff; border: 1px solid #ececec; border-radius: 20px;
                box-shadow: 0 24px 48px -16px rgba(20,60,55,.28); animation: pf-pop .18s ease; }
     .pf-menu[hidden] { display: none; }
     @keyframes pf-pop { from { opacity: 0; transform: translateY(-6px); } }
     .pf-head { display: flex; align-items: center; gap: 12px; padding: 10px 10px 12px; border-bottom: 1px solid #f0f0f0; margin-bottom: 6px; }
-    .pf-head .pf-av { width: 40px; height: 40px; }
+    .pf-head .pf-av { width: 40px; height: 40px; border-radius: 12px; }
     .pf-head b { display: block; font-size: 15px; color: #141414; }
     .pf-head small { font-size: 12px; color: #999; }
     .pf-menu a, .pf-menu button.pf-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 11px 10px;
-               border: 0; border-radius: 12px; background: none; font: inherit; font-size: 14px; color: #333; text-align: left; cursor: pointer; }
+               border: 0; border-radius: 12px; background: none; font: inherit; font-size: 14px; color: #333; text-align: left; }
     .pf-menu a:hover, .pf-menu button.pf-item:hover { background: #f3f7f6; }
     .pf-menu svg { width: 18px; height: 18px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.8;
                    stroke-linecap: round; stroke-linejoin: round; color: var(--green-dark); }
     .pf-menu .pf-out, .pf-menu .pf-out svg { color: #d4574a; }
+
+    /* ===== 본문 ===== */
+    body { background: #fff; }
+    .inner { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+    .rv { opacity: 0; transform: translateY(40px); transition: opacity 1s cubic-bezier(.2,.7,.2,1), transform 1s cubic-bezier(.2,.7,.2,1); }
+    .rv.on { opacity: 1; transform: none; }
+    .label { font-size: 16px; font-weight: 700; color: var(--green-dark); }
+    .muted { color: #b5b5b5; }
+
+    /* 1. 히어로 */
+    .hero { padding-top: 140px; padding-bottom: 72px; }
+    .hero h1 { margin-top: 22px; font-size: 84px; font-weight: 800; letter-spacing: -3.5px; line-height: 1.16; color: #111; word-break: keep-all; }
+    .hero-photo { max-width: 1360px; margin: 0 auto; padding: 0 32px; }
+    .hero-photo .frame { height: 620px; border-radius: 40px; overflow: hidden;
+                         background: linear-gradient(135deg, #cfe0dc 0%, #e9eeec 50%, #d6e4e0 100%); }
+    .hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; display: block; }
+
+    /* 2. 선언문 */
+    .statement { padding-top: 180px; padding-bottom: 160px; }
+    .statement .say { margin-top: 28px; font-size: 46px; font-weight: 700; letter-spacing: -1.6px; line-height: 1.45; color: #111; word-break: keep-all; }
+
+    /* 3. 기능 (좌우 교차) */
+    .feature { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 96px; padding: 120px 0; border-top: 1px solid #eee; }
+    .feature.flip .text { order: 2; }
+    .feature .no { font-size: 18px; font-weight: 700; color: var(--green); }
+    .feature h2 { margin-top: 18px; font-size: 52px; font-weight: 800; letter-spacing: -2px; line-height: 1.22; color: #111; word-break: keep-all; }
+    .feature p { margin-top: 24px; font-size: 20px; line-height: 1.7; color: #777; word-break: keep-all; }
+    .visual { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; height: 520px;
+              border-radius: 40px; background: linear-gradient(135deg, #e3eeeb 0%, #f4f6f5 60%, #e8f0ee 100%); }
+    .visual img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .visual.photo::after { content: ""; position: absolute; inset: 0; background: rgba(15,42,38,.12); }
+    .visual .ui { position: relative; z-index: 1; }
+    .ui { width: 340px; padding: 34px 30px; background: #fff; border-radius: 28px; box-shadow: 0 30px 60px -20px rgba(20,60,55,.25); }
+    .ui small { font-size: 14px; color: #888; }
+    .ui .big { margin-top: 10px; font-size: 48px; font-weight: 800; letter-spacing: -2px; color: var(--green-dark); }
+    .ui .sub { margin-top: 10px; font-size: 13px; color: #aaa; }
+    .ui .row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #f1f1f1; font-size: 15px; }
+    .ui .row:last-child { border-bottom: 0; padding-bottom: 0; }
+    .ui .row b { font-weight: 700; }
+    .ui .d { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 42px; height: 46px;
+             margin-right: 12px; border-radius: 12px; background: #f1f6f5; font-size: 10px; color: #888; line-height: 1.1; }
+    .ui .d strong { font-size: 16px; color: var(--green-dark); }
+    .ui .left { display: flex; align-items: center; }
+    .ui .bar { height: 12px; margin-top: 18px; border-radius: 6px; background: #e8eeec; overflow: hidden; }
+    .ui .bar i { display: block; width: 39.5%; height: 100%; border-radius: 6px; background: var(--green-dark); }
+    .ui .meta { display: flex; justify-content: space-between; margin-top: 10px; font-size: 13px; color: #999; }
+
+    /* 4. 숫자 */
+    .numbers { padding: 160px 0; background: #f6f8f7; }
+    .numbers h2 { font-size: 46px; font-weight: 800; letter-spacing: -1.6px; line-height: 1.3; color: #111; }
+    .nums { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 24px; margin-top: 72px; }
+    .num { padding-top: 28px; border-top: 2px solid #111; }
+    .num b { display: block; font-size: 72px; font-weight: 800; letter-spacing: -3px; color: var(--green-dark); line-height: 1; }
+    .num span { display: block; margin-top: 18px; font-size: 18px; color: #555; }
+
+    /* 5. 마무리 */
+    .closing { padding-top: 180px; padding-bottom: 200px; text-align: center; }
+    .closing h2 { font-size: 64px; font-weight: 800; letter-spacing: -2.6px; line-height: 1.25; color: #111; word-break: keep-all; }
+    .closing a { display: inline-flex; align-items: center; gap: 10px; height: 64px; margin-top: 48px; padding: 0 38px; border-radius: 999px;
+                 background: #111; color: #fff; font-size: 18px; font-weight: 700; transition: background .25s ease, transform .25s ease; }
+    .closing a:hover { background: var(--green-dark); transform: translateY(-2px); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .nav { animation: none; }
+      .rv { opacity: 1; transform: none; transition: none; }
+      .nav-menu a, .nav-menu a::after, .profile, .closing a { transition: none; }
+    }
+
+    @media (max-width: 900px) {
+      .feature { grid-template-columns: 1fr; gap: 48px; padding: 88px 0; }
+      .feature.flip .text { order: 0; }
+      .nums { grid-template-columns: 1fr; gap: 40px; }
+    }
+
     @media (max-width: 768px) {
+      .nav { padding: 0 16px; }
+      .nav-title { margin-right: 12px; }
+      .nav-name { display: none; }
+      .logo svg { width: 11px; height: 28px; }
+      .nav-menu { gap: 0; overflow-x: auto; }
+      .nav-menu a { padding: 0 8px; font-size: 13px; }
+      .nav-menu a::after { left: 8px; right: 8px; }
       .profile { width: 34px; height: 34px; border-radius: 11px; }
       .pf-menu { position: fixed; top: 68px; right: 12px; }
+      .inner, .hero-photo { padding: 0 20px; }
+      .hero { padding-top: 72px; padding-bottom: 40px; }
+      .hero h1 { font-size: 44px; letter-spacing: -1.8px; }
+      .hero-photo .frame { height: 340px; border-radius: 26px; }
+      .statement { padding-top: 104px; padding-bottom: 88px; }
+      .statement .say { font-size: 28px; letter-spacing: -1px; }
+      .feature h2 { font-size: 34px; letter-spacing: -1.2px; }
+      .feature p { font-size: 17px; }
+      .visual { height: 400px; border-radius: 28px; }
+      .ui { width: 280px; padding: 28px 24px; }
+      .ui .big { font-size: 40px; }
+      .numbers { padding: 96px 0; }
+      .numbers h2 { font-size: 30px; }
+      .nums { margin-top: 48px; }
+      .num b { font-size: 56px; }
+      .closing { padding-top: 112px; padding-bottom: 128px; }
+      .closing h2 { font-size: 38px; letter-spacing: -1.4px; }
     }
-    @media (prefers-reduced-motion: reduce) { .profile, .pf-menu { transition: none; animation: none; } }
+  </style>
+  <!-- 로그인 페이지의 '소개 둘러보기'로 들어오면(?tour) 소개 페이지만 보여 줘요 -->
+  <script>
+    if (/[?&]tour\b/.test(location.search)) document.documentElement.classList.add('tour');
+  </script>
+  <style>
+    .tour-back { display: none; align-items: center; gap: 6px; height: 38px; padding: 0 16px; border: 1.5px solid #dfe4e2; border-radius: 999px;
+                 font-size: 14px; font-weight: 600; color: #222; white-space: nowrap; transition: border-color .2s ease, color .2s ease; }
+    .tour-back:hover { border-color: #2e7d72; color: #2e7d72; }
+    .tour .nav-menu { visibility: hidden; }                       /* 다른 페이지 메뉴 숨기기 */
+    .tour .nav-user > :not(.tour-back) { display: none !important; } /* 프로필 · 로그인 버튼 대신 '돌아가기'만 */
+    .tour .tour-back { display: inline-flex; }
+    .tour .ft-top > div:nth-child(2), .tour .ft-top > div:nth-child(3) { display: none; } /* 푸터의 다른 페이지 링크 */
+    .tour .ft-top { grid-template-columns: 1.6fr 1fr; }
+    .tour .st-foot { display: none; }                             /* 시작하기 창의 '대시보드 예시 보기' */
+    /* ===== 헤더 로고: 작은 점 + 한글(살짝 얇게) + 영문 ===== */
+    .nav-title { gap: 9px; font-weight: 700; letter-spacing: -.6px; }
+    .nav-title .logo svg { width: 10px; height: 24px; }
+    .nav-en { padding-top: 3px; font-size: 11px; font-weight: 600; letter-spacing: 1.6px; color: #6cc0b2; }
+    @media (max-width: 768px) { .nav-en { display: none; } }
   </style>
 </head>
 
 <body>
 
   <header class="nav">
+    <!-- 로고와 '월여유' 글씨를 누르면 시작하기 페이지로 -->
     <div class="nav-title">
       <span class="logo">
-        <svg viewBox="0 0 14 34" aria-hidden="true"><circle cx="7" cy="7" r="7" fill="#c4e3dd"/><circle cx="7" cy="17" r="7" fill="#6fb3aa"/><circle cx="7" cy="27" r="7" fill="#2e7d72"/></svg>
+        <svg viewBox="0 0 14 34" aria-hidden="true"><circle cx="7" cy="4.6" r="4.4" fill="#c9e7e0"/><circle cx="7" cy="15.4" r="5.1" fill="#6cc0b2"/><circle cx="7" cy="27.7" r="5.9" fill="#1f5a52"/></svg>
       </span>
       <span class="nav-name">월여유</span>
+      <span class="nav-en" aria-hidden="true">WOLYEOYU</span>
     </div>
     <nav class="nav-menu">
       <a href="./about.html">소개</a>
@@ -202,14 +223,6 @@
       <a href="./support.html">고객센터</a>
     </nav>
     <div class="nav-user">
-      <button type="button" class="ib" aria-label="검색">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      </button>
-      <button type="button" class="ib" aria-label="알림">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-        <i class="dot"></i>
-      </button>
-      <span class="nav-sep"></span>
       <button type="button" class="profile" aria-label="내 프로필 메뉴" aria-haspopup="menu" aria-expanded="false">
         <span class="pf-av">
           <!-- 실제 사진이 있으면 아래 svg 대신 <img src="사진주소" alt=""> 를 넣으세요 -->
@@ -227,6 +240,7 @@
         <button type="button" class="pf-item pf-out" role="menuitem"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>로그아웃</button>
       </div>
       <a href="./login.html" class="login-btn">로그인</a>
+      <a href="./login.html" class="tour-back">← 로그인으로 돌아가기</a>
     </div>
   </header>
   <script>
@@ -238,70 +252,133 @@
       });
     })();
 
-    /* 로그인 상태에 따라 상단 오른쪽 바꾸기: 로그인 전 → '로그인' 버튼 / 로그인 후 → 알림 · 프로필 */
+    /* 로그인 상태에 따라 상단 오른쪽 바꾸기: 로그인 전 → '로그인' 버튼 / 로그인 후 → 프로필 */
     (function () {
       var on = false;
       try { on = !!(localStorage.getItem('wolyeoyu-login') || sessionStorage.getItem('wolyeoyu-login')); } catch (e) {}
       document.querySelector('.nav').classList.add(on ? 'is-in' : 'is-out');
     })();
+
+    /* 프로필 버튼: 이름 넣기 · 누르면 메뉴 · 로그아웃 */
+    (function () {
+      var nav = document.querySelector('.nav');
+      var btn = document.querySelector('.profile');
+      var menu = document.getElementById('pfMenu');
+      var name = '김여유', mail = 'yeoyu@mail.com';
+      try {
+        name = localStorage.getItem('wolyeoyu-name') || sessionStorage.getItem('wolyeoyu-name') || name;
+        mail = localStorage.getItem('wolyeoyu-mail') || sessionStorage.getItem('wolyeoyu-mail') || mail;
+      } catch (e) {}
+      document.querySelector('.pf-user').textContent = name;
+      document.querySelector('.pf-mail').textContent = mail;
+
+      function setOpen(v) { menu.hidden = !v; btn.setAttribute('aria-expanded', v ? 'true' : 'false'); }
+      btn.addEventListener('click', function () { setOpen(menu.hidden); });
+      document.addEventListener('click', function (e) {
+        if (!menu.hidden && !btn.contains(e.target) && !menu.contains(e.target)) setOpen(false);
+      }, true);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !menu.hidden) { setOpen(false); btn.focus(); }
+      });
+
+      menu.querySelector('.pf-out').addEventListener('click', function () {
+        try {
+          ['wolyeoyu-login', 'wolyeoyu-name', 'wolyeoyu-mail'].forEach(function (k) {
+            localStorage.removeItem(k); sessionStorage.removeItem(k);
+          });
+        } catch (e) {}
+        setOpen(false);
+        nav.classList.remove('is-in');
+        nav.classList.add('is-out');
+      });
+    })();
   </script>
 
-  <main class="home">
-    <p class="label up" style="animation-delay:.1s">오늘 쓸 수 있는 돈</p>
-    <p class="amount up" style="animation-delay:.2s" data-count="60800">60,800원</p>
-    <p class="hint up" style="animation-delay:.35s">남은 25일 동안 하루에 이만큼 쓰면 돼요</p>
+  <main>
 
-    <a href="./dashboard.html" class="next up" style="animation-delay:.5s">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 14h2M8 17h2"/></svg>
-      <span class="what">다음 결제 3일 뒤, 월세</span>
-      <span class="money">500,000원</span>
-    </a>
-
-
-    <section class="cols up" style="animation-delay:.65s">
-
-      <!-- 이번 주 지출 -->
-      <div class="panel">
-        <div class="panel-head">
-          <h2>이번 주 지출</h2>
-          <span>합계 <b>132,000원</b></span>
-        </div>
-        <!-- 막대 높이: 금액 / 90,000원 기준 (점선 = 하루 권장 60,800원) -->
-        <div class="week">
-          <div class="limit" style="bottom: calc(30px + (100% - 30px) * .676)"><em>하루 60,800원</em></div>
-          <div class="day"><i style="height:47%; animation-delay:.9s"></i><span>월</span></div>
-          <div class="day"><i class="over" style="height:79%; animation-delay:1s"></i><span>화</span></div>
-          <div class="day on"><i class="today" style="height:20%; animation-delay:1.1s"></i><span>수</span></div>
-          <div class="day"><i class="empty"></i><span>목</span></div>
-          <div class="day"><i class="empty"></i><span>금</span></div>
-          <div class="day"><i class="empty"></i><span>토</span></div>
-          <div class="day"><i class="empty"></i><span>일</span></div>
-        </div>
-      </div>
-
-      <!-- 최근 거래 -->
-      <div class="panel">
-        <div class="panel-head">
-          <h2>최근 거래</h2>
-          <a href="./salary.html"><span>더 보기 ›</span></a>
-        </div>
-        <ul class="tx">
-          <li>
-            <span class="ico"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M8 21v-3M16 21v-3"/></svg></span>
-            <span class="name">버스<small>오늘 08:42</small></span><span class="money">1,250원</span>
-          </li>
-          <li>
-            <span class="ico"><svg viewBox="0 0 24 24"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 2-2 6 0 8v10"/></svg></span>
-            <span class="name">스타벅스<small>오늘 09:10</small></span><span class="money">4,800원</span>
-          </li>
-          <li>
-            <span class="ico"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></span>
-            <span class="name">무신사<small>어제 21:35</small></span><span class="money">51,000원</span>
-          </li>
-        </ul>
-      </div>
-
+    <!-- 1. 히어로 -->
+    <section class="hero inner">
+      <p class="label rv">월여유</p>
+      <h1 class="rv">월급날까지,<br>오늘 쓸 돈만<br>보면 돼요</h1>
     </section>
+    <div class="hero-photo rv">
+      <div class="frame">
+        <!-- 사진: Brooke Cagle / Unsplash (Unsplash License) — src만 바꾸면 다른 사진으로 교체돼요 -->
+        <img src="https://images.unsplash.com/photo-1653762371653-2d21fb7ffd26?auto=format&fit=crop&w=2400&q=80"
+             alt="카페에서 휴대폰을 보고 있는 사람" onerror="this.remove()">
+      </div>
+    </div>
+
+    <!-- 2. 선언문 -->
+    <section class="statement inner">
+      <p class="label rv">우리가 하는 일</p>
+      <p class="say rv">복잡한 가계부는 쓰지 않아도 괜찮아요.<br><span class="muted">월급과 고정지출만 알려주시면,</span><br>매일 써도 되는 금액을 숫자 하나로 알려드려요.</p>
+    </section>
+
+    <!-- 3. 기능 -->
+    <section class="inner">
+      <div class="feature">
+        <div class="text rv">
+          <p class="no">01</p>
+          <h2>오늘 쓸 돈을<br>자동으로 계산해요</h2>
+          <p>남은 돈에서 고정지출과 저축을 빼고,<br>다음 월급날까지 남은 날로 나눠 드려요.</p>
+        </div>
+        <div class="visual rv">
+          <div class="ui"><small>오늘 쓸 수 있는 돈</small><p class="big">60,800원</p><p class="sub">남은 25일 동안 하루에 이만큼 쓰면 돼요</p></div>
+        </div>
+      </div>
+
+      <div class="feature flip">
+        <div class="text rv">
+          <p class="no">02</p>
+          <h2>빠져나갈 돈은<br>미리 알려드려요</h2>
+          <p>월세, 통신비, 구독료처럼 매달 나가는 돈을<br>결제일 전에 먼저 챙겨 드려요.</p>
+        </div>
+        <div class="visual photo rv">
+          <!-- 사진: Spl Interiors / Unsplash (Unsplash License) -->
+          <img src="https://images.unsplash.com/photo-1746517757473-7c88850e539b?auto=format&fit=crop&w=1400&q=80"
+               alt="햇살이 드는 거실" loading="lazy" onerror="this.remove()">
+          <div class="ui">
+            <div class="row"><span class="left"><span class="d">10월<strong>10</strong></span>월세</span><b>500,000원</b></div>
+            <div class="row"><span class="left"><span class="d">10월<strong>15</strong></span>통신비</span><b>55,000원</b></div>
+            <div class="row"><span class="left"><span class="d">10월<strong>21</strong></span>구독 서비스</span><b>17,900원</b></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="text rv">
+          <p class="no">03</p>
+          <h2>모으는 즐거움까지<br>함께해요</h2>
+          <p>이번 달 저축 목표를 정하면<br>얼마나 모였는지 한눈에 보여드려요.</p>
+        </div>
+        <div class="visual photo rv">
+          <!-- 사진: Nika Benedictova / Unsplash (Unsplash License) -->
+          <img src="https://images.unsplash.com/photo-1721831143856-81ad5de04de4?auto=format&fit=crop&w=1400&q=80"
+               alt="동전이 담긴 유리병" loading="lazy" onerror="this.remove()">
+          <div class="ui"><small>이번 달 저축 목표</small><p class="big">39.5%</p><div class="bar"><i></i></div><div class="meta"><span>600,000원</span><span>1,520,000원</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 숫자 -->
+    <section class="numbers">
+      <div class="inner">
+        <h2 class="rv">시작은 가볍게,<br>관리는 꾸준하게</h2>
+        <div class="nums">
+          <div class="num rv"><b>1번</b><span>월급과 고정지출 입력은 한 번이면 끝</span></div>
+          <div class="num rv"><b>1개</b><span>매일 확인할 숫자는 딱 하나</span></div>
+          <div class="num rv"><b>0원</b><span>이용 요금 없이 무료로</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. 마무리 -->
+    <section class="closing inner">
+      <h2 class="rv">이번 달부터<br>가볍게 시작해 보세요</h2>
+      <a href="./onboarding.html" class="rv" id="startBtn" aria-haspopup="dialog">시작하기 →</a>
+    </section>
+
   </main>
 
   <!-- ===== 푸터 (모든 페이지 공통) ===== -->
@@ -348,7 +425,7 @@
       <div class="ft-top">
         <div>
           <span class="ft-brand">
-            <svg viewBox="0 0 14 34" aria-hidden="true"><circle cx="7" cy="7" r="7" fill="#c4e3dd"/><circle cx="7" cy="17" r="7" fill="#6fb3aa"/><circle cx="7" cy="27" r="7" fill="#2e7d72"/></svg>
+            <svg viewBox="0 0 14 34" aria-hidden="true"><circle cx="7" cy="4.6" r="4.4" fill="#c9e7e0"/><circle cx="7" cy="15.4" r="5.1" fill="#6cc0b2"/><circle cx="7" cy="27.7" r="5.9" fill="#1f5a52"/></svg>
             월여유
           </span>
           <p class="ft-desc">월급날까지, 오늘 쓸 돈만 보면 돼요.<br>복잡한 가계부 대신 매일 확인할 숫자 하나만 알려 드려요.</p>
@@ -432,283 +509,17 @@
 
   <script>
     (function () {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      var el = document.querySelector('[data-count]');
-      var target = parseFloat(el.dataset.count);
-      el.textContent = '0원';
-      setTimeout(function () {
-        var start = performance.now();
-        (function tick(now) {
-          var t = Math.min((now - start) / 1200, 1);
-          var v = Math.round(target * (1 - Math.pow(1 - t, 3)));
-          el.textContent = v.toLocaleString('ko-KR') + '원';
-          if (t < 1) requestAnimationFrame(tick);
-        })(start);
-      }, 300);
-    })();
-  </script>
-
-  <script>
-    /* ===== 알림 · 검색 (돋보기 누르면 검색창, 종 누르면 알림) ===== */
-    (function () {
-      var css = `
-        .nav-user { position: relative; }
-        @keyframes nx-pop { from { opacity: 0; transform: translateY(-6px); } }
-        @keyframes nx-fade { from { opacity: 0; } }
-
-        /* 알림 패널 */
-        .noti { position: absolute; top: calc(100% + 12px); right: 0; z-index: 30; width: 360px; max-width: calc(100vw - 32px);
-                padding: 8px; background: #fff; border: 1px solid #ececec; border-radius: 20px; white-space: normal;
-                box-shadow: 0 24px 48px -16px rgba(20,60,55,.28); animation: nx-pop .18s ease; }
-        .noti[hidden] { display: none; }
-        .noti-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px 8px; }
-        .noti-head b { font-size: 16px; color: #141414; }
-        .noti-read { border: 0; background: none; font: inherit; font-size: 13px; font-weight: 600; color: var(--green-dark); cursor: pointer; }
-        .noti ul { list-style: none; }
-        .noti li { position: relative; display: flex; gap: 12px; padding: 12px 14px; border-radius: 14px; }
-        .noti li:hover { background: #f6f8f7; }
-        .noti li.new::after { content: ""; position: absolute; top: 18px; right: 14px; width: 6px; height: 6px; border-radius: 50%; background: var(--green-dark); }
-        .noti-ic { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 36px; height: 36px;
-                   border-radius: 50%; background: #e3f0ed; color: var(--green-dark); }
-        .noti-ic.warn { background: #fdecea; color: #d4574a; }
-        .noti-ic svg, .sch-ic svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-        .noti-txt small { font-size: 12px; color: #9a9a9a; }
-        .noti-txt p { margin-top: 3px; padding-right: 14px; font-size: 14px; line-height: 1.45; color: #333; word-break: keep-all; }
-        .noti-txt p b { color: #141414; }
-        .noti-all { display: block; margin-top: 4px; padding: 12px; border-top: 1px solid #f0f0f0; text-align: center; font-size: 14px; color: #555; }
-        .noti-all:hover { color: var(--green-dark); }
-
-        /* 검색 창 */
-        .sch { position: fixed; inset: 0; z-index: 50; display: flex; align-items: flex-start; justify-content: center;
-               padding: 88px 16px 16px; background: rgba(15,30,28,.32); backdrop-filter: blur(3px); animation: nx-fade .15s ease; }
-        .sch[hidden] { display: none; }
-        .sch-box { width: 100%; max-width: 620px; overflow: hidden; background: #fff; border-radius: 24px;
-                   box-shadow: 0 40px 80px -20px rgba(0,0,0,.35); animation: nx-pop .2s ease; }
-        .sch-input { display: flex; align-items: center; gap: 12px; height: 68px; padding: 0 22px; border-bottom: 1px solid #f0f0f0; }
-        .sch-input svg { width: 22px; height: 22px; flex-shrink: 0; color: #9a9a9a; }
-        .sch-input input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: inherit; font-size: 18px; color: #141414; }
-        .sch-input input::placeholder { color: #b0b0b0; }
-        .sch-input kbd { padding: 3px 7px; border: 1px solid #e3e3e3; border-radius: 6px; font: inherit; font-size: 11px; color: #999; cursor: pointer; }
-        .sch-body { max-height: min(60vh, 460px); overflow-y: auto; padding: 14px 12px 16px; }
-        .sch-label { padding: 6px 10px; font-size: 12px; font-weight: 600; color: #9a9a9a; }
-        .sch-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 4px 10px 16px; }
-        .sch-chips button { height: 34px; padding: 0 14px; border: 1px solid #e3e6e5; border-radius: 99px; background: #fff;
-                            font: inherit; font-size: 14px; color: #444; cursor: pointer; }
-        .sch-chips button:hover { border-color: var(--green); color: var(--green-dark); }
-        .sch-item { display: flex; align-items: center; gap: 14px; padding: 12px 10px; border-radius: 14px; color: #141414; }
-        .sch-item:hover, .sch-item.on { background: #f3f7f6; }
-        .sch-ic { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 38px; height: 38px;
-                  border-radius: 12px; background: #e3f0ed; color: var(--green-dark); }
-        .sch-txt { flex: 1; min-width: 0; }
-        .sch-txt b { display: block; font-size: 15px; font-weight: 600; }
-        .sch-txt small { font-size: 12px; color: #999; }
-        .sch-item i { font-style: normal; color: #bbb; }
-        .sch mark { background: none; color: var(--green-dark); font-weight: 800; }
-        .sch-empty { padding: 40px 10px; text-align: center; font-size: 15px; color: #999; }
-
-        @media (max-width: 768px) {
-          .nav-user .ib[aria-label="검색"] { display: flex; }
-          .noti { position: fixed; top: 68px; right: 12px; left: 12px; width: auto; max-width: none; }
-          .sch { padding-top: 24px; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .noti, .sch, .sch-box { animation: none; }
-        }
-      `;
-      var style = document.createElement('style');
-      style.textContent = css;
-      document.head.appendChild(style);
-
-      var user = document.querySelector('.nav-user');
-      var bell = document.querySelector('.ib[aria-label="알림"]');
-      var searchBtn = document.querySelector('.ib[aria-label="검색"]');
-      if (!user || !bell || !searchBtn) return;
-
-      /* 공통 도구 */
-      function pick(arr, n) {
-        var a = arr.slice();
-        for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
-        return a.slice(0, n);
+      var els = document.querySelectorAll('.rv');
+      if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        els.forEach(function (el) { el.classList.add('on'); });
+        return;
       }
-      function esc(s) { return s.replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
-      var ICON = {
-        cal: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
-        coin: '<circle cx="12" cy="12" r="9"/><path d="M14.5 9.5h-3.2a1.8 1.8 0 0 0 0 3.6h1.4a1.8 1.8 0 0 1 0 3.6H9.5M12 7v1.8M12 16.7v1.8"/>',
-        card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
-        alert: '<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/>',
-        target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/>',
-        trend: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
-        chat: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
-        info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
-        gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>'
-      };
-      function svg(name) { return '<svg viewBox="0 0 24 24">' + ICON[name] + '</svg>'; }
-
-      /* ---------- 알림 ---------- */
-      var NOTI = [
-        { i: 'cal',    k: '결제 예정',   t: '월세 <b>500,000원</b>이 3일 뒤 빠져나가요' },
-        { i: 'coin',   k: '오늘 예산',   t: '오늘 쓸 수 있는 돈은 <b>60,800원</b>이에요' },
-        { i: 'alert',  k: '예산 초과',   t: '화요일에 하루 예산을 <b>10,300원</b> 넘었어요', warn: true },
-        { i: 'target', k: '저축',       t: '이번 달 저축 목표의 <b>39.5%</b>를 달성했어요' },
-        { i: 'cal',    k: '결제 예정',   t: '통신비 <b>55,000원</b>이 10월 15일에 결제돼요' },
-        { i: 'card',   k: '결제 완료',   t: '스타벅스에서 <b>4,800원</b>이 결제됐어요' },
-        { i: 'trend',  k: '지출 리포트', t: '이번 주 지출이 지난주보다 <b>12%</b> 줄었어요' },
-        { i: 'coin',   k: '월급',       t: '월급날까지 <b>18일</b> 남았어요' },
-        { i: 'cal',    k: '결제 예정',   t: '구독 서비스 <b>17,900원</b>이 21일에 결제돼요' },
-        { i: 'card',   k: '결제 완료',   t: '무신사에서 <b>51,000원</b>이 결제됐어요' }
-      ];
-      var TIMES = ['방금 전', '12분 전', '1시간 전', '3시간 전', '어제'];
-
-      var noti = document.createElement('div');
-      noti.className = 'noti';
-      noti.hidden = true;
-      user.appendChild(noti);
-
-      function renderNoti() {
-        var list = pick(NOTI, 4);
-        var unread = bell.querySelector('.dot') ? 1 + Math.floor(Math.random() * 3) : 0;
-        noti.innerHTML =
-          '<div class="noti-head"><b>알림</b><button type="button" class="noti-read">모두 읽음</button></div>' +
-          '<ul>' + list.map(function (n, idx) {
-            return '<li class="' + (idx < unread ? 'new' : '') + '">' +
-                     '<span class="noti-ic' + (n.warn ? ' warn' : '') + '">' + svg(n.i) + '</span>' +
-                     '<div class="noti-txt"><small>' + n.k + ' · ' + TIMES[idx] + '</small><p>' + n.t + '</p></div>' +
-                   '</li>';
-          }).join('') + '</ul>' +
-          '<a class="noti-all" href="./dashboard.html">전체 알림 보기</a>';
-        noti.querySelector('.noti-read').addEventListener('click', function () {
-          noti.querySelectorAll('li.new').forEach(function (li) { li.classList.remove('new'); });
-          var dot = bell.querySelector('.dot');
-          if (dot) dot.remove();
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); }
         });
-      }
-
-      function closeNoti() { noti.hidden = true; bell.setAttribute('aria-expanded', 'false'); }
-      bell.setAttribute('aria-expanded', 'false');
-      bell.addEventListener('click', function (e) {
-        e.stopPropagation();
-        if (noti.hidden) { renderNoti(); noti.hidden = false; bell.setAttribute('aria-expanded', 'true'); }
-        else closeNoti();
-      });
-      noti.addEventListener('click', function (e) { e.stopPropagation(); });
-      document.addEventListener('click', closeNoti);
-
-      /* ---------- 검색 (돋보기) ---------- */
-      var PAGES = [
-        { t: '오늘 쓸 수 있는 돈', d: '홈',        u: './home.html',      i: 'coin',   k: '하루 예산 오늘' },
-        { t: '이번 주 지출',       d: '홈',        u: './home.html',      i: 'trend',  k: '주간 지출 그래프' },
-        { t: '최근 거래',          d: '홈',        u: './home.html',      i: 'card',   k: '버스 스타벅스 무신사 결제' },
-        { t: '정기지출',           d: '대시보드',   u: './dashboard.html', i: 'cal',    k: '월세 교통비 구독료 고정지출' },
-        { t: '이번 달 사용 계획',   d: '대시보드',   u: './dashboard.html', i: 'target', k: '식비 약속 취미 쇼핑' },
-        { t: '이번 달 수입',       d: '대시보드',   u: './dashboard.html', i: 'coin',   k: '월급 수입' },
-        { t: '지출 현황',          d: '월급 관리',  u: './salary.html',    i: 'trend',  k: '월세 교통비 기타 총 지출' },
-        { t: '저축 목표',          d: '월급 관리',  u: './salary.html',    i: 'target', k: '저축 목표 관리' },
-        { t: '자산 현황',          d: '월급 관리',  u: './salary.html',    i: 'trend',  k: '총 자산' },
-        { t: '채팅 상담',          d: '고객센터',   u: './support.html',   i: 'chat',   k: '상담 문의 전화' },
-        { t: '자주 묻는 질문',      d: '고객센터',   u: './support.html',   i: 'info',   k: 'FAQ 도움말' },
-        { t: '서비스 소개',        d: '소개',       u: './about.html',     i: 'info',   k: '소개 처음' },
-        { t: '월급일 변경',        d: '설정',       u: '#',                i: 'gear',   k: '월급 정보 설정' },
-        { t: '알림 설정',          d: '설정',       u: '#',                i: 'gear',   k: '알림 푸시' }
-      ];
-      var HOT = ['월세', '저축 목표', '월급일 변경', '구독료', '교통비', '이번 주 지출', '채팅 상담', '자산', '식비', '최근 거래'];
-
-      var sch = document.createElement('div');
-      sch.className = 'sch';
-      sch.hidden = true;
-      sch.innerHTML =
-        '<div class="sch-box" role="dialog" aria-label="검색">' +
-          '<label class="sch-input">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>' +
-            '<input type="text" placeholder="메뉴, 기능, 지출 항목을 검색해 보세요">' +
-            '<kbd>ESC</kbd>' +
-          '</label>' +
-          '<div class="sch-body"></div>' +
-        '</div>';
-      document.body.appendChild(sch);
-      var input = sch.querySelector('input');
-      var body = sch.querySelector('.sch-body');
-
-      function items(list, q) {
-        return list.map(function (p, idx) {
-          var title = esc(p.t);
-          if (q) title = title.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>');
-          return '<a class="sch-item' + (idx === 0 && q ? ' on' : '') + '" href="' + p.u + '">' +
-                   '<span class="sch-ic">' + svg(p.i) + '</span>' +
-                   '<span class="sch-txt"><b>' + title + '</b><small>' + p.d + '</small></span><i>→</i>' +
-                 '</a>';
-        }).join('');
-      }
-
-      function renderSearch() {
-        var raw = input.value.trim();
-        var q = raw.toLowerCase();
-        if (!q) {
-          body.innerHTML =
-            '<p class="sch-label">추천 검색어</p>' +
-            '<div class="sch-chips">' + pick(HOT, 5).map(function (h) { return '<button type="button">' + h + '</button>'; }).join('') + '</div>' +
-            '<p class="sch-label">바로가기</p>' + items(pick(PAGES, 3), '');
-          body.querySelectorAll('.sch-chips button').forEach(function (b) {
-            b.addEventListener('click', function () { input.value = b.textContent; renderSearch(); input.focus(); });
-          });
-          return;
-        }
-        var res = PAGES.filter(function (p) { return (p.t + ' ' + p.d + ' ' + p.k).toLowerCase().indexOf(q) > -1; });
-        body.innerHTML = res.length
-          ? '<p class="sch-label">검색 결과 ' + res.length + '개</p>' + items(res, esc(raw))
-          : '<p class="sch-empty">‘' + esc(raw) + '’에 대한 결과가 없어요</p>';
-      }
-
-      function openSearch() { closeNoti(); input.value = ''; renderSearch(); sch.hidden = false; setTimeout(function () { input.focus(); }, 30); }
-      function closeSearch() { sch.hidden = true; }
-
-      searchBtn.addEventListener('click', function (e) { e.stopPropagation(); openSearch(); });
-      sch.addEventListener('click', function (e) { if (e.target === sch) closeSearch(); });
-      sch.querySelector('kbd').addEventListener('click', closeSearch);
-      input.addEventListener('input', renderSearch);
-      input.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') { var first = body.querySelector('.sch-item'); if (first) first.click(); }
-      });
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') { closeSearch(); closeNoti(); }
-      });
-    })();
-  </script>
-
-  <script>
-    /* ===== 프로필 버튼: 이름 넣기 · 누르면 메뉴 · 로그아웃 ===== */
-    (function () {
-      var nav = document.querySelector('.nav');
-      var btn = document.querySelector('.profile');
-      var menu = document.getElementById('pfMenu');
-      if (!btn || !menu) return;
-      var name = '김여유', mail = 'yeoyu@mail.com';
-      try {
-        name = localStorage.getItem('wolyeoyu-name') || sessionStorage.getItem('wolyeoyu-name') || name;
-        mail = localStorage.getItem('wolyeoyu-mail') || sessionStorage.getItem('wolyeoyu-mail') || mail;
-      } catch (e) {}
-      menu.querySelector('.pf-user').textContent = name;
-      menu.querySelector('.pf-mail').textContent = mail;
-
-      function setOpen(v) { menu.hidden = !v; btn.setAttribute('aria-expanded', v ? 'true' : 'false'); }
-      btn.addEventListener('click', function () { setOpen(menu.hidden); });
-      /* 바깥을 누르면 닫기 (알림 종·검색을 눌러도 닫힘) */
-      document.addEventListener('click', function (e) {
-        if (!menu.hidden && !btn.contains(e.target) && !menu.contains(e.target)) setOpen(false);
-      }, true);
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && !menu.hidden) { setOpen(false); btn.focus(); }
-      });
-
-      menu.querySelector('.pf-out').addEventListener('click', function () {
-        try {
-          ['wolyeoyu-login', 'wolyeoyu-name', 'wolyeoyu-mail'].forEach(function (k) {
-            localStorage.removeItem(k); sessionStorage.removeItem(k);
-          });
-        } catch (e) {}
-        setOpen(false);
-        nav.classList.remove('is-in');
-        nav.classList.add('is-out');
-      });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+      els.forEach(function (el) { io.observe(el); });
     })();
   </script>
 
@@ -959,6 +770,100 @@
         if (btn) btn.setAttribute('aria-expanded', 'false');
         open(a.dataset.mi);
       });
+    })();
+  </script>
+
+  <!-- ===== 시작하기 선택 창 ('시작하기 →' 버튼을 누르면 떠요) ===== -->
+  <style>
+    .st-modal { position: fixed; inset: 0; z-index: 230; display: flex; align-items: center; justify-content: center; padding: 16px;
+                background: rgba(15,30,28,.38); backdrop-filter: blur(3px); animation: st-fade .18s ease; }
+    .st-modal[hidden] { display: none; }
+    @keyframes st-fade { from { opacity: 0; } }
+    @keyframes st-up { from { opacity: 0; transform: translateY(16px) scale(.98); } }
+    .st-sheet { position: relative; width: 100%; max-width: 440px; padding: 30px 28px 24px; background: #fff; border-radius: 26px;
+                box-shadow: 0 40px 80px -20px rgba(0,0,0,.35); font-family: 'Pretendard', sans-serif; animation: st-up .24s cubic-bezier(.2,.7,.2,1); }
+    .st-x { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border: 0; border-radius: 50%; background: #f5f7f6;
+            color: #777; font-size: 22px; line-height: 1; cursor: pointer; }
+    .st-x:hover { background: #eaf1ef; color: #2e7d72; }
+    .st-sheet h3 { padding-right: 40px; font-size: 22px; font-weight: 800; letter-spacing: -.6px; color: #141414; }
+    .st-sheet > p { margin-top: 6px; font-size: 14.5px; color: #8a8f8d; }
+    .st-opts { display: grid; gap: 10px; margin-top: 22px; }
+    .st-opt { display: flex; align-items: center; gap: 14px; padding: 18px; border: 1.5px solid #e3e8e6; border-radius: 18px; background: #fff;
+              color: inherit; text-decoration: none; transition: border-color .2s ease, background .2s ease, transform .2s ease; }
+    .st-opt:hover, .st-opt:focus-visible { outline: 0; border-color: #2e7d72; background: #f6faf9; transform: translateY(-1px); }
+    .st-ic { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 46px; height: 46px; border-radius: 14px;
+             background: #e3f0ed; color: #2e7d72; }
+    .st-ic svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .st-opt.main .st-ic { background: #2e7d72; color: #fff; }
+    .st-txt { flex: 1; min-width: 0; }
+    .st-txt b { display: block; font-size: 16.5px; font-weight: 700; color: #141414; }
+    .st-txt small { display: block; margin-top: 2px; font-size: 13.5px; color: #8a8f8d; }
+    .st-arrow { font-size: 20px; color: #c2c8c6; transition: color .2s ease, transform .2s ease; }
+    .st-opt:hover .st-arrow { color: #2e7d72; transform: translateX(3px); }
+    .st-foot { margin-top: 18px; text-align: center; font-size: 13.5px; color: #9aa09e; }
+    .st-foot a { color: #2e7d72; font-weight: 600; text-decoration: none; }
+    .st-foot a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    @media (max-width: 600px) {
+      .st-modal { align-items: flex-end; padding: 0; }
+      .st-sheet { max-width: none; border-radius: 26px 26px 0 0; padding: 28px 20px 24px; }
+    }
+    @media (prefers-reduced-motion: reduce) { .st-modal, .st-sheet { animation: none; } .st-opt, .st-arrow { transition: none; } }
+  </style>
+
+  <div class="st-modal" id="startModal" hidden>
+    <div class="st-sheet" role="dialog" aria-modal="true" aria-labelledby="startTitle">
+      <button type="button" class="st-x" aria-label="닫기">×</button>
+      <h3 id="startTitle">월여유를 처음 쓰시나요?</h3>
+      <p>알맞은 곳으로 바로 안내해 드릴게요</p>
+      <div class="st-opts">
+        <a href="./onboarding.html" class="st-opt main">
+          <span class="st-ic"><svg viewBox="0 0 24 24"><path d="M12 22V12"/><path d="M12 12C12 7 8 4 3 4c0 5 3.5 8 9 8z"/><path d="M12 14c0-4 3-7 9-7 0 4.5-3 7-9 7z"/></svg></span>
+          <span class="st-txt"><b>처음이에요</b><small>월급과 고정지출만 넣으면 1분이면 끝나요</small></span>
+          <span class="st-arrow" aria-hidden="true">›</span>
+        </a>
+        <a href="./login.html" class="st-opt" id="startLogin">
+          <span class="st-ic"><svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3M17 6l3 3M15 8l2 2"/></svg></span>
+          <span class="st-txt"><b id="startLoginTitle">이미 계정이 있어요</b><small id="startLoginSub">로그인하고 이어서 쓸게요</small></span>
+          <span class="st-arrow" aria-hidden="true">›</span>
+        </a>
+      </div>
+      <p class="st-foot">둘러보기만 할게요 · <a href="./dashboard.html">대시보드 예시 보기</a></p>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('startBtn');
+      var modal = document.getElementById('startModal');
+      if (!btn || !modal) return;
+
+      /* 이미 로그인했으면 두 번째 칸을 '내 홈으로 가기'로 */
+      var on = false;
+      try { on = !!(localStorage.getItem('wolyeoyu-login') || sessionStorage.getItem('wolyeoyu-login')); } catch (e) {}
+      function syncLogin() {
+        var logged = document.querySelector('.nav') && document.querySelector('.nav').classList.contains('is-in');
+        var a = document.getElementById('startLogin');
+        a.href = logged ? './home.html' : './login.html';
+        document.getElementById('startLoginTitle').textContent = logged ? '이미 쓰고 있어요' : '이미 계정이 있어요';
+        document.getElementById('startLoginSub').textContent = logged ? '내 홈으로 바로 갈게요' : '로그인하고 이어서 쓸게요';
+      }
+
+      function open(e) {
+        e.preventDefault();
+        syncLogin();
+        modal.hidden = false;
+        document.body.style.overflow = 'hidden';
+        setTimeout(function () { modal.querySelector('.st-opt').focus(); }, 40);
+      }
+      function close() {
+        modal.hidden = true;
+        document.body.style.overflow = '';
+        btn.focus();
+      }
+      btn.addEventListener('click', open);
+      modal.querySelector('.st-x').addEventListener('click', close);
+      modal.addEventListener('click', function (e) { if (e.target === modal) close(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) close(); });
     })();
   </script>
 

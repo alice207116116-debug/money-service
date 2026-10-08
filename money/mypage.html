@@ -241,6 +241,11 @@
       .calc div + div { border-left: 0; border-top: 1px solid #eef1f0; }
       .row-end .btn { flex: 1; }
     }
+    /* ===== 헤더 로고: 작은 점 + 한글(살짝 얇게) + 영문 ===== */
+    .nav-title { gap: 9px; font-weight: 700; letter-spacing: -.6px; }
+    .nav-title .logo svg { width: 10px; height: 24px; }
+    .nav-en { padding-top: 3px; font-size: 11px; font-weight: 600; letter-spacing: 1.6px; color: #6cc0b2; }
+    @media (max-width: 768px) { .nav-en { display: none; } }
   </style>
 </head>
 
@@ -249,9 +254,10 @@
   <header class="nav">
     <div class="nav-title">
       <span class="logo">
-        <svg viewBox="0 0 14 34" aria-hidden="true"><circle cx="7" cy="7" r="7" fill="#c4e3dd"/><circle cx="7" cy="17" r="7" fill="#6fb3aa"/><circle cx="7" cy="27" r="7" fill="#2e7d72"/></svg>
+        <svg viewBox="0 0 14 34" aria-hidden="true"><circle cx="7" cy="4.6" r="4.4" fill="#c9e7e0"/><circle cx="7" cy="15.4" r="5.1" fill="#6cc0b2"/><circle cx="7" cy="27.7" r="5.9" fill="#1f5a52"/></svg>
       </span>
       <span class="nav-name">월여유</span>
+      <span class="nav-en" aria-hidden="true">WOLYEOYU</span>
     </div>
     <nav class="nav-menu">
       <a href="./about.html">소개</a>
@@ -462,7 +468,7 @@
       <div class="ft-top">
         <div>
           <span class="ft-brand">
-            <svg viewBox="0 0 14 34" aria-hidden="true"><circle cx="7" cy="7" r="7" fill="#c4e3dd"/><circle cx="7" cy="17" r="7" fill="#6fb3aa"/><circle cx="7" cy="27" r="7" fill="#2e7d72"/></svg>
+            <svg viewBox="0 0 14 34" aria-hidden="true"><circle cx="7" cy="4.6" r="4.4" fill="#c9e7e0"/><circle cx="7" cy="15.4" r="5.1" fill="#6cc0b2"/><circle cx="7" cy="27.7" r="5.9" fill="#1f5a52"/></svg>
             월여유
           </span>
           <p class="ft-desc">월급날까지, 오늘 쓸 돈만 보면 돼요.<br>복잡한 가계부 대신 매일 확인할 숫자 하나만 알려 드려요.</p>
