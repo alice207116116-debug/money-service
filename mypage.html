@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>내 정보 | 월여유</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <style>
+    :root {
+      --green: #4a968c;
+      --green-dark: #2e7d72;
+      --green-mid: #6fb3aa;
+      --green-light: #dce8e5;
+      --green-tint: #f3f8f7;
+      --line: #ebeeed;
+      --red: #d4574a;
+      --bg: #f5f6f5;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Pretendard', sans-serif; background: var(--bg); color: #222; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ===== 상단 바 ===== */
+    .nav { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; height: 60px;
+           padding: 0 38px; background: #fff; border-bottom: 1px solid #e6e6e6;
+           animation: nav-in .5s cubic-bezier(.2,.7,.2,1) both; }
+    @keyframes nav-in { from { transform: translateY(-100%); opacity: 0; } }
+    .nav-title { display: flex; align-items: center; gap: 9px; font-size: 19px; font-weight: 800; letter-spacing: -.5px;
+                 color: #141414; margin-right: 44px; white-space: nowrap; transition: opacity .2s ease; }
+    .logo { display: flex; flex-shrink: 0; }
+    .logo svg { width: 12px; height: 30px; }
+    .nav-menu { display: flex; gap: 8px; flex: 1; align-self: stretch; }
+    .nav-menu a { position: relative; display: flex; align-items: center; padding: 0 14px; font-size: 14px;
+                  color: #666; white-space: nowrap; transition: color .2s ease; }
+    .nav-menu a::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: -1px; height: 2px;
+                         background: var(--green-dark); transform: scaleX(0); transform-origin: left; transition: transform .3s ease; }
+    .nav-menu a:hover { color: var(--green-dark); }
+    .nav-menu a:hover::after { transform: scaleX(1); }
+
+    .nav-user { position: relative; display: flex; align-items: center; gap: 6px; }
+    .login-btn { display: none; align-items: center; height: 38px; padding: 0 18px; border: 1.5px solid #dfe4e2; border-radius: 999px;
+                 font-size: 14px; font-weight: 600; color: #222; white-space: nowrap; transition: border-color .2s ease, color .2s ease; }
+    .login-btn:hover { border-color: var(--green-dark); color: var(--green-dark); }
+    .nav.is-out .login-btn { display: inline-flex; }
+    .nav.is-out .profile { display: none; }
+
+    .profile { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; padding: 0; border: 0;
+               border-radius: 12px; background: var(--green-light); color: var(--green-dark); overflow: hidden;
+               transition: background .2s ease, box-shadow .2s ease, transform .2s ease; }
+    .profile:hover { background: #cfe2de; transform: translateY(-1px); }
+    .profile[aria-expanded="true"], .profile:focus-visible { outline: 0; box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--green-dark); }
+    .pf-av { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 100%; height: 100%;
+             overflow: hidden; border-radius: 12px; background: var(--green-light); color: var(--green-dark); }
+    .pf-av svg { width: 22px; height: 22px; fill: currentColor; }
+    .pf-menu { position: absolute; top: calc(100% + 12px); right: 0; z-index: 30; width: 240px; padding: 8px; background: #fff;
+               border: 1px solid #ececec; border-radius: 20px; box-shadow: 0 24px 48px -16px rgba(20,60,55,.28); animation: pop .18s ease; }
+    .pf-menu[hidden] { display: none; }
+    @keyframes pop { from { opacity: 0; transform: translateY(-6px); } }
+    .pf-head { display: flex; align-items: center; gap: 12px; padding: 10px 10px 12px; border-bottom: 1px solid #f0f0f0; margin-bottom: 6px; }
+    .pf-head .pf-av { width: 40px; height: 40px; }
+    .pf-head b { display: block; font-size: 15px; color: #141414; }
+    .pf-head small { font-size: 12px; color: #999; }
+    .pf-menu a, .pf-menu button.pf-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 11px 10px; border: 0;
+               border-radius: 12px; background: none; font: inherit; font-size: 14px; color: #333; text-align: left; }
+    .pf-menu a:hover, .pf-menu button.pf-item:hover { background: #f3f7f6; }
+    .pf-menu svg { width: 18px; height: 18px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.8;
+                   stroke-linecap: round; stroke-linejoin: round; color: var(--green-dark); }
+    .pf-menu .pf-out, .pf-menu .pf-out svg { color: var(--red); }
+
+    /* ===== 본문 ===== */
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 44px 32px 80px; }
+    .page-head h1 { font-size: 28px; font-weight: 800; letter-spacing: -.9px; color: #141414; }
+    .page-head p { margin-top: 6px; font-size: 15px; color: #8a8f8d; }
+
+    .layout { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; margin-top: 24px; align-items: start; }
+    .card { background: #fff; border: 1px solid var(--line); border-radius: 26px;
+            box-shadow: 0 1px 2px rgba(16,40,36,.04), 0 12px 32px -20px rgba(16,40,36,.12);
+            animation: rise .6s cubic-bezier(.2,.7,.2,1) both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+    .stack { display: grid; gap: 20px; }
+    .stack .card:nth-child(2) { animation-delay: .06s; }
+    .stack .card:nth-child(3) { animation-delay: .12s; }
+    .stack .card:nth-child(4) { animation-delay: .18s; }
+
+    /* 왼쪽 프로필 */
+    .side { position: sticky; top: 84px; display: grid; gap: 16px; }
+    .me { padding: 30px 26px 24px; text-align: center; }
+    .me-av { display: inline-flex; align-items: center; justify-content: center; width: 84px; height: 84px; border-radius: 26px;
+             background: var(--green-light); color: var(--green-dark); font-size: 34px; font-weight: 800; }
+    .me-name { margin-top: 16px; font-size: 21px; font-weight: 800; letter-spacing: -.5px; color: #141414; word-break: break-all; }
+    .me-mail { margin-top: 4px; font-size: 14px; color: #8a8f8d; word-break: break-all; }
+    .me-since { display: inline-block; margin-top: 12px; padding: 4px 10px; border-radius: 99px; background: var(--green-tint);
+                font-size: 12.5px; color: #4b6b66; }
+    .me-stats { display: grid; grid-template-columns: 1fr 1fr; margin-top: 22px; padding-top: 18px; border-top: 1px solid #f0f2f1; text-align: left; }
+    .me-stats div + div { padding-left: 16px; border-left: 1px solid #f0f2f1; }
+    .me-stats small { font-size: 12.5px; color: #9aa09e; }
+    .me-stats b { display: block; margin-top: 3px; font-size: 18px; font-weight: 700; color: #141414; letter-spacing: -.3px; white-space: nowrap; }
+    .me-stats b.g { color: var(--green-dark); }
+
+    .toc { padding: 8px; }
+    .toc a { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 14px; font-size: 14.5px; color: #555;
+             transition: background .2s ease, color .2s ease; }
+    .toc a:hover, .toc a.on { background: var(--green-tint); color: var(--green-dark); font-weight: 600; }
+    .toc svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* 오른쪽 카드 공통 */
+    .sec { padding: 28px 30px; scroll-margin-top: 84px; }
+    .sec-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .sec-head h2 { font-size: 19px; font-weight: 700; letter-spacing: -.4px; color: #141414; }
+    .sec-head p { margin-top: 4px; font-size: 13.5px; color: #8a8f8d; }
+    .link { flex-shrink: 0; padding: 6px 10px; margin: -6px -10px 0 0; border-radius: 10px; font-size: 14px; font-weight: 600;
+            color: var(--green-dark); transition: background .2s ease; }
+    .link:hover { background: #f1f7f5; }
+
+    .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 22px; }
+    .f label { display: block; margin-bottom: 8px; font-size: 13.5px; font-weight: 600; color: #555; }
+    .box { position: relative; }
+    .in, .sel { width: 100%; height: 50px; padding: 0 16px; border: 1.5px solid #e3e8e6; border-radius: 14px; outline: 0; background: #fff;
+                font: inherit; font-size: 16px; color: #141414; transition: border-color .2s ease, box-shadow .2s ease; }
+    .sel { appearance: none; padding-right: 40px; cursor: pointer;
+           background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center / 16px; }
+    .in:focus, .sel:focus { border-color: var(--green-dark); box-shadow: 0 0 0 4px rgba(46,125,114,.12); }
+    .in.money { padding-right: 40px; text-align: right; font-weight: 700; }
+    .unit { position: absolute; top: 50%; right: 16px; transform: translateY(-50%); font-size: 15px; color: #999; pointer-events: none; }
+    .f.err .in { border-color: var(--red); box-shadow: 0 0 0 4px rgba(212,87,74,.1); }
+    .msg { display: none; margin-top: 6px; font-size: 12.5px; color: var(--red); }
+    .f.err .msg { display: block; }
+
+    .calc { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 20px; border: 1px solid #eef1f0; border-radius: 18px; overflow: hidden; }
+    .calc div { padding: 14px 18px; }
+    .calc div + div { border-left: 1px solid #eef1f0; }
+    .calc small { font-size: 12.5px; color: #9aa09e; }
+    .calc b { display: block; margin-top: 4px; font-size: 18px; font-weight: 700; color: #141414; letter-spacing: -.3px; white-space: nowrap; }
+    .calc b.g { color: var(--green-dark); }
+
+    .row-end { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+    .btn { height: 44px; padding: 0 20px; border-radius: 13px; font-size: 14.5px; font-weight: 700; transition: background .2s ease, color .2s ease, border-color .2s ease; }
+    .btn-dark { border: 0; background: #141414; color: #fff; }
+    .btn-dark:hover { background: var(--green-dark); }
+    .btn-dark:disabled { background: #d9dedc; color: #fff; cursor: default; }
+    .btn-line { border: 1px solid #e3e8e6; background: #fff; color: #444; }
+    .btn-line:hover { border-color: var(--green); color: var(--green-dark); }
+
+    /* 정기지출 요약 */
+    .fx { list-style: none; margin-top: 14px; }
+    .fx li { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid #f1f3f2; font-size: 15px; }
+    .fx li:first-child { border-top: 0; }
+    .fx .d { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; min-width: 52px; height: 28px; padding: 0 8px;
+             border-radius: 9px; background: #f1f6f5; font-size: 12.5px; font-weight: 600; color: #4b6b66; }
+    .fx .nm { flex: 1; min-width: 0; font-weight: 600; color: #1b1f1e; }
+    .fx .am { font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .fx-sum { display: flex; justify-content: space-between; margin-top: 6px; padding: 14px 16px; border-radius: 14px; background: #f7f9f8; font-size: 14.5px; color: #555; }
+    .fx-sum b { color: #141414; }
+
+    /* 알림 토글 */
+    .tg { margin-top: 10px; }
+    .tg-row { display: flex; align-items: center; gap: 14px; padding: 16px 0; border-top: 1px solid #f1f3f2; cursor: pointer; }
+    .tg-row:first-child { border-top: 0; }
+    .tg-txt { flex: 1; min-width: 0; }
+    .tg-txt b { display: block; font-size: 15.5px; font-weight: 600; color: #141414; }
+    .tg-txt small { font-size: 13px; color: #9aa09e; }
+    .switch { position: relative; flex-shrink: 0; width: 46px; height: 28px; }
+    .switch input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+    .switch span { position: absolute; inset: 0; border-radius: 99px; background: #dcdcdc; transition: background .2s ease; pointer-events: none; }
+    .switch span::after { content: ""; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff;
+                          box-shadow: 0 1px 3px rgba(0,0,0,.2); transition: transform .2s ease; }
+    .switch input:checked + span { background: var(--green-dark); }
+    .switch input:checked + span::after { transform: translateX(18px); }
+    .switch input:focus-visible + span { box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--green-dark); }
+
+    /* 계정 */
+    .acts { margin-top: 10px; }
+    .act { display: flex; align-items: center; gap: 14px; width: 100%; padding: 16px 0; border: 0; border-top: 1px solid #f1f3f2; background: none;
+           text-align: left; font: inherit; color: inherit; }
+    .act:first-child { border-top: 0; }
+    .act-ic { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 38px; height: 38px; border-radius: 12px; background: #f1f6f5; color: var(--green-dark); }
+    .act-ic svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .act b { display: block; font-size: 15.5px; font-weight: 600; color: #141414; }
+    .act small { font-size: 13px; color: #9aa09e; }
+    .act > span:nth-child(2) { flex: 1; min-width: 0; }
+    .act i { font-style: normal; color: #c2c8c6; }
+    .act:hover b { color: var(--green-dark); }
+    .act.danger .act-ic { background: #fdeeec; color: var(--red); }
+    .act.danger b { color: var(--red); }
+
+    /* 로그인 전 */
+    .guest { max-width: 520px; margin: 40px auto 0; padding: 44px 36px; text-align: center; }
+    .guest .me-av { width: 72px; height: 72px; }
+    .guest .me-av svg { width: 34px; height: 34px; fill: currentColor; }
+    .guest h2 { margin-top: 18px; font-size: 22px; font-weight: 800; letter-spacing: -.5px; color: #141414; }
+    .guest p { margin-top: 8px; font-size: 15px; color: #8a8f8d; }
+    .guest .row-end { justify-content: center; margin-top: 24px; }
+    body.is-guest .layout, body.is-guest .page-head { display: none; }
+    body:not(.is-guest) .guest { display: none; }
+
+    /* 팝업 */
+    .modal { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: 16px;
+             background: rgba(15,30,28,.36); backdrop-filter: blur(3px); animation: fade .18s ease; }
+    .modal[hidden] { display: none; }
+    @keyframes fade { from { opacity: 0; } }
+    .sheet { width: 100%; max-width: 420px; padding: 30px 28px 24px; background: #fff; border-radius: 26px;
+             box-shadow: 0 40px 80px -20px rgba(0,0,0,.35); animation: rise .22s cubic-bezier(.2,.7,.2,1); }
+    .sheet h3 { font-size: 21px; font-weight: 800; letter-spacing: -.5px; color: #141414; }
+    .sheet p { margin-top: 8px; font-size: 14.5px; line-height: 1.6; color: #777; word-break: keep-all; }
+    .sheet .row-end button { flex: 1; height: 48px; }
+    .btn-red { border: 0; background: var(--red); color: #fff; }
+    .btn-red:hover { background: #bd4a3f; }
+
+    .toast { position: fixed; left: 50%; bottom: 36px; z-index: 70; padding: 14px 22px; border-radius: 999px; background: #141414;
+             color: #fff; font-size: 15px; font-weight: 600; white-space: nowrap; transform: translate(-50%, 20px); opacity: 0;
+             pointer-events: none; transition: opacity .25s ease, transform .25s ease; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .nav, .card, .sheet, .modal, .pf-menu { animation: none; }
+      .switch span, .switch span::after { transition: none; }
+    }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .side { position: static; }
+      .toc { display: none; }
+    }
+
+    @media (max-width: 768px) {
+      .nav { padding: 0 16px; }
+      .nav-title { margin-right: 12px; }
+      .nav-name { display: none; }
+      .nav-menu { gap: 0; overflow-x: auto; }
+      .nav-menu a { padding: 0 8px; font-size: 13px; }
+      .nav-menu a::after { left: 8px; right: 8px; }
+      .profile { width: 34px; height: 34px; border-radius: 11px; }
+      .pf-menu { position: fixed; top: 68px; right: 12px; }
+      .wrap { padding: 28px 16px 60px; }
+      .page-head h1 { font-size: 24px; }
+      .sec { padding: 24px 20px; }
+      .fields { grid-template-columns: 1fr; }
+      .calc { grid-template-columns: 1fr; }
+      .calc div + div { border-left: 0; border-top: 1px solid #eef1f0; }
+      .row-end .btn { flex: 1; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="nav">
+    <div class="nav-title">
+      <span class="logo">
+        <svg viewBox="0 0 14 34" aria-hidden="true"><circle cx="7" cy="7" r="7" fill="#c4e3dd"/><circle cx="7" cy="17" r="7" fill="#6fb3aa"/><circle cx="7" cy="27" r="7" fill="#2e7d72"/></svg>
+      </span>
+      <span class="nav-name">월여유</span>
+    </div>
+    <nav class="nav-menu">
+      <a href="./about.html">소개</a>
+      <a href="./home.html">홈</a>
+      <a href="./dashboard.html">대시보드</a>
+      <a href="./salary.html">월급 관리</a>
+      <a href="./support.html">고객센터</a>
+    </nav>
+    <div class="nav-user">
+      <button type="button" class="profile" aria-label="내 프로필 메뉴" aria-haspopup="menu" aria-expanded="false">
+        <span class="pf-av"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4.2"/><path d="M3.5 22c1.2-4.6 4.6-7.2 8.5-7.2s7.3 2.6 8.5 7.2z"/></svg></span>
+      </button>
+      <div class="pf-menu" id="pfMenu" role="menu" hidden>
+        <div class="pf-head">
+          <span class="pf-av"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4.2"/><path d="M3.5 22c1.2-4.6 4.6-7.2 8.5-7.2s7.3 2.6 8.5 7.2z"/></svg></span>
+          <span><b class="pf-user">김여유</b><small class="pf-mail">yeoyu@mail.com</small></span>
+        </div>
+        <a href="./mypage.html#profile" role="menuitem" data-mi="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6"/></svg>내 정보</a>
+        <a href="./mypage.html#salary" role="menuitem" data-mi="salary"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="13" rx="3"/><path d="M16 12.5h2M2 10h20"/></svg>월급 설정</a>
+        <a href="./mypage.html#notify" role="menuitem" data-mi="notify"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>알림 설정</a>
+        <button type="button" class="pf-item pf-out" role="menuitem"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>로그아웃</button>
+      </div>
+      <a href="./login.html" class="login-btn">로그인</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- 로그인 전에 보이는 안내 -->
+    <section class="card guest">
+      <span class="me-av"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4.2"/><path d="M3.5 22c1.2-4.6 4.6-7.2 8.5-7.2s7.3 2.6 8.5 7.2z"/></svg></span>
+      <h2>로그인하면 내 정보를 볼 수 있어요</h2>
+      <p>처음이라면 월급과 고정지출만 알려 주세요. 1분이면 끝나요.</p>
+      <div class="row-end">
+        <a href="./login.html" class="btn btn-line" style="display:inline-flex;align-items:center">로그인</a>
+        <a href="./onboarding.html" class="btn btn-dark" style="display:inline-flex;align-items:center">시작하기</a>
+      </div>
+    </section>
+
+    <div class="page-head">
+      <h1>내 정보</h1>
+      <p>프로필, 월급, 알림을 한곳에서 바꿀 수 있어요</p>
+    </div>
+
+    <div class="layout">
+
+      <!-- 왼쪽: 프로필 요약 + 바로가기 -->
+      <aside class="side">
+        <section class="card me">
+          <span class="me-av" id="meAv">김</span>
+          <p class="me-name" id="meName">김여유</p>
+          <p class="me-mail" id="meMail">yeoyu@mail.com</p>
+          <span class="me-since" id="meSince">월여유와 함께한 지 1일째</span>
+          <div class="me-stats">
+            <div><small>하루 예산</small><b class="g" id="stDaily">0원</b></div>
+            <div><small>월급날까지</small><b id="stDday">D-0</b></div>
+          </div>
+        </section>
+        <nav class="card toc" aria-label="내 정보 바로가기">
+          <a href="#profile" class="on"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6"/></svg>프로필</a>
+          <a href="#salary"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="13" rx="3"/><path d="M16 12.5h2M2 10h20"/></svg>월급 정보</a>
+          <a href="#fixed"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>정기지출</a>
+          <a href="#notify"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>알림</a>
+          <a href="#account"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>계정</a>
+        </nav>
+      </aside>
+
+      <div class="stack">
+
+        <!-- 프로필 -->
+        <section class="card sec" id="profile">
+          <div class="sec-head"><div><h2>프로필</h2><p>앱에서 불러 드릴 이름과 연락받을 이메일이에요</p></div></div>
+          <form id="profileForm" novalidate>
+            <div class="fields">
+              <div class="f" id="f-name">
+                <label for="inName">이름 또는 별명</label>
+                <input class="in" id="inName" type="text" maxlength="12" autocomplete="nickname">
+                <p class="msg">이름을 입력해 주세요.</p>
+              </div>
+              <div class="f" id="f-mail">
+                <label for="inMail">이메일</label>
+                <input class="in" id="inMail" type="email" maxlength="60" autocomplete="email">
+                <p class="msg">이메일 형식을 확인해 주세요.</p>
+              </div>
+            </div>
+            <div class="row-end"><button type="submit" class="btn btn-dark" id="profileSave" disabled>저장하기</button></div>
+          </form>
+        </section>
+
+        <!-- 월급 정보 -->
+        <section class="card sec" id="salary">
+          <div class="sec-head"><div><h2>월급 정보</h2><p>바꾸면 하루 예산이 바로 다시 계산돼요</p></div></div>
+          <form id="salaryForm" novalidate>
+            <div class="fields">
+              <div class="f" id="f-salary">
+                <label for="inSalary">한 달 월급 (세후)</label>
+                <div class="box"><input class="in money" id="inSalary" type="text" inputmode="numeric" autocomplete="off"><span class="unit">원</span></div>
+                <p class="msg">월급을 입력해 주세요.</p>
+              </div>
+              <div class="f">
+                <label for="inPayday">매달 월급날</label>
+                <select class="sel" id="inPayday"></select>
+              </div>
+              <div class="f" id="f-saving">
+                <label for="inSaving">한 달 저축 목표</label>
+                <div class="box"><input class="in money" id="inSaving" type="text" inputmode="numeric" autocomplete="off"><span class="unit">원</span></div>
+                <p class="msg">월급에서 정기지출을 뺀 금액보다 많아요.</p>
+              </div>
+            </div>
+            <div class="calc">
+              <div><small>한 달 자유롭게 쓸 돈</small><b id="cFree">0원</b></div>
+              <div><small>저축하고 남는 돈</small><b id="cLeft">0원</b></div>
+              <div><small>하루 예산</small><b class="g" id="cDaily">0원</b></div>
+            </div>
+            <div class="row-end"><button type="submit" class="btn btn-dark" id="salarySave" disabled>저장하기</button></div>
+          </form>
+        </section>
+
+        <!-- 정기지출 -->
+        <section class="card sec" id="fixed">
+          <div class="sec-head">
+            <div><h2>정기지출</h2><p id="fxDesc">매달 정해진 날 빠져나가는 돈이에요</p></div>
+            <a href="./dashboard.html" class="link">대시보드에서 관리 →</a>
+          </div>
+          <ul class="fx" id="fxList"></ul>
+          <div class="fx-sum"><span>매달 나가는 돈</span><b id="fxTotal">0원</b></div>
+        </section>
+
+        <!-- 알림 -->
+        <section class="card sec" id="notify">
+          <div class="sec-head"><div><h2>알림</h2><p>바꾸는 즉시 저장돼요</p></div></div>
+          <div class="tg">
+            <label class="tg-row"><span class="tg-txt"><b>결제 하루 전 알림</b><small>정기지출이 빠져나가기 전날 알려 드려요</small></span>
+              <span class="switch"><input type="checkbox" data-k="pay"><span></span></span></label>
+            <label class="tg-row"><span class="tg-txt"><b>아침 예산 알림</b><small>매일 아침 오늘 쓸 수 있는 돈을 알려 드려요</small></span>
+              <span class="switch"><input type="checkbox" data-k="daily"><span></span></span></label>
+            <label class="tg-row"><span class="tg-txt"><b>하루 예산 초과 알림</b><small>오늘 예산을 넘으면 바로 알려 드려요</small></span>
+              <span class="switch"><input type="checkbox" data-k="over"><span></span></span></label>
+            <label class="tg-row"><span class="tg-txt"><b>월급날 리포트</b><small>월급날에 지난달을 한 장으로 정리해 드려요</small></span>
+              <span class="switch"><input type="checkbox" data-k="report"><span></span></span></label>
+          </div>
+        </section>
+
+        <!-- 계정 -->
+        <section class="card sec" id="account">
+          <div class="sec-head"><div><h2>계정</h2></div></div>
+          <div class="acts">
+            <a href="./onboarding.html" class="act">
+              <span class="act-ic"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span>
+              <span><b>처음부터 다시 설정하기</b><small>시작하기 화면에서 월급과 정기지출을 새로 입력해요</small></span><i>›</i>
+            </a>
+            <button type="button" class="act" id="logoutBtn">
+              <span class="act-ic"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg></span>
+              <span><b>로그아웃</b><small>입력한 정보는 이 기기에 그대로 남아요</small></span><i>›</i>
+            </button>
+            <button type="button" class="act danger" id="resetBtn">
+              <span class="act-ic"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></span>
+              <span><b>내 정보 모두 지우기</b><small>이름, 월급, 정기지출, 알림 설정을 이 기기에서 지워요</small></span><i>›</i>
+            </button>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== 푸터 (모든 페이지 공통) ===== -->
+  <style>
+    .ft { margin-top: 64px; background: #fff; border-top: 1px solid #e9eceb; font-family: 'Pretendard', sans-serif; }
+    .ft-in { max-width: 1200px; margin: 0 auto; padding: 48px 40px 32px; }
+    .ft-top { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 32px; }
+    .ft .ft-brand { display: inline-flex; align-items: center; gap: 9px; font-size: 18px; font-weight: 800; letter-spacing: -.5px; color: #141414; }
+    .ft-brand svg { width: 11px; height: 27px; }
+    .ft-desc { margin-top: 12px; font-size: 14px; line-height: 1.7; color: #8a8f8d; word-break: keep-all; }
+    .ft h4 { font-size: 14px; font-weight: 700; color: #444; }
+    .ft ul { list-style: none; margin-top: 14px; }
+    .ft li + li { margin-top: 10px; }
+    .ft a, .ft .ft-link { border: 0; background: none; padding: 0; font: inherit; font-size: 14px; color: #8a8f8d; cursor: pointer; transition: color .2s ease; }
+    .ft a:hover, .ft .ft-link:hover { color: #2e7d72; }
+    .ft .ft-strong { font-weight: 700; color: #555; }
+    .ft-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; margin-top: 36px; padding-top: 20px;
+                 border-top: 1px solid #f0f2f1; font-size: 13px; color: #a3a8a6; }
+    .ft-bottom span + span::before { content: "·"; margin: 0 8px; }
+
+    .ft-modal { position: fixed; inset: 0; z-index: 220; display: flex; align-items: center; justify-content: center; padding: 16px;
+                background: rgba(15,30,28,.38); backdrop-filter: blur(3px); }
+    .ft-modal[hidden] { display: none; }
+    .ft-sheet { display: flex; flex-direction: column; width: 100%; max-width: 640px; max-height: 80vh; background: #fff; border-radius: 24px;
+                box-shadow: 0 40px 80px -20px rgba(0,0,0,.35); font-family: 'Pretendard', sans-serif; }
+    .ft-sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 24px 26px 16px; border-bottom: 1px solid #f0f2f1; }
+    .ft-sheet-head h3 { font-size: 20px; font-weight: 800; letter-spacing: -.4px; color: #141414; }
+    .ft-sheet-head button { width: 36px; height: 36px; border: 0; border-radius: 50%; background: #f5f7f6; color: #777; font-size: 22px; line-height: 1; cursor: pointer; }
+    .ft-sheet-body { overflow-y: auto; padding: 20px 26px 26px; font-size: 14.5px; line-height: 1.75; color: #555; word-break: keep-all; }
+    .ft-sheet-body h5 { margin-top: 18px; font-size: 15px; font-weight: 700; color: #222; }
+    .ft-sheet-body h5:first-child { margin-top: 0; }
+    .ft-sheet-body .note { margin-bottom: 14px; padding: 10px 14px; border-radius: 12px; background: #f3f8f7; font-size: 13px; color: #4b6b66; }
+
+    @media (max-width: 900px) {
+      .ft-top { grid-template-columns: 1fr 1fr; }
+      .ft-top > div:first-child { grid-column: 1 / -1; }
+    }
+    @media (max-width: 768px) {
+      .ft-in { padding: 36px 20px 28px; }
+    }
+  </style>
+  <footer class="ft">
+    <div class="ft-in">
+      <div class="ft-top">
+        <div>
+          <span class="ft-brand">
+            <svg viewBox="0 0 14 34" aria-hidden="true"><circle cx="7" cy="7" r="7" fill="#c4e3dd"/><circle cx="7" cy="17" r="7" fill="#6fb3aa"/><circle cx="7" cy="27" r="7" fill="#2e7d72"/></svg>
+            월여유
+          </span>
+          <p class="ft-desc">월급날까지, 오늘 쓸 돈만 보면 돼요.<br>복잡한 가계부 대신 매일 확인할 숫자 하나만 알려 드려요.</p>
+        </div>
+        <div>
+          <h4>서비스</h4>
+          <ul>
+            <li><a href="./about.html">소개</a></li>
+            <li><a href="./onboarding.html">시작하기</a></li>
+            <li><a href="./dashboard.html">대시보드</a></li>
+            <li><a href="./salary.html">월급 관리</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>도움</h4>
+          <ul>
+            <li><a href="./support.html">고객센터</a></li>
+            <li><a href="./support.html#faq">자주 묻는 질문</a></li>
+            <li><a href="./support.html">1:1 문의</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>약관</h4>
+          <ul>
+            <li><button type="button" class="ft-link" data-doc="terms">이용약관</button></li>
+            <li><button type="button" class="ft-link ft-strong" data-doc="privacy">개인정보처리방침</button></li>
+          </ul>
+        </div>
+      </div>
+      <div class="ft-bottom">
+        <p><span>© <span id="ftYear">2026</span> 월여유</span></p>
+        <p><span>문의 1588-0000</span><span>평일 09:00–18:00</span><span>help@wolyeoyu.kr</span></p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="ft-modal" id="ftModal" hidden>
+    <div class="ft-sheet" role="dialog" aria-modal="true" aria-labelledby="ftTitle">
+      <div class="ft-sheet-head"><h3 id="ftTitle"></h3><button type="button" aria-label="닫기">×</button></div>
+      <div class="ft-sheet-body" id="ftBody"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var DOCS = {
+        terms: {
+          t: '이용약관',
+          b: '<p class="note">아래는 예시 문구예요. 서비스를 실제로 내보내기 전에 꼭 실제 약관으로 바꿔 주세요.</p>' +
+             '<h5>제1조 (목적)</h5><p>이 약관은 월여유(이하 “서비스”)를 이용하는 데 필요한 기본적인 사항을 정해요.</p>' +
+             '<h5>제2조 (서비스 내용)</h5><p>서비스는 이용자가 입력한 월급과 정기지출을 바탕으로 하루에 쓸 수 있는 금액을 계산해 보여 줘요.</p>' +
+             '<h5>제3조 (이용자의 의무)</h5><p>이용자는 정확한 정보를 입력해야 하며, 다른 사람의 정보를 함부로 사용하면 안 돼요.</p>'
+        },
+        privacy: {
+          t: '개인정보처리방침',
+          b: '<p class="note">아래는 예시 문구예요. 서비스를 실제로 내보내기 전에 꼭 실제 방침으로 바꿔 주세요.</p>' +
+             '<h5>1. 모으는 정보</h5><p>이름(별명), 이메일, 월급, 월급날, 정기지출, 저축 목표, 알림 설정.</p>' +
+             '<h5>2. 정보를 쓰는 곳</h5><p>하루 예산 계산과 알림 발송에만 써요.</p>' +
+             '<h5>3. 보관과 삭제</h5><p>지금은 정보를 이 기기(브라우저)에만 저장해요. 내 정보 페이지의 ‘내 정보 모두 지우기’로 언제든 지울 수 있어요.</p>'
+        }
+      };
+      var modal = document.getElementById('ftModal');
+      var last = null;
+      document.getElementById('ftYear').textContent = new Date().getFullYear();
+      function close() { modal.hidden = true; document.body.style.overflow = ''; if (last) last.focus(); }
+      document.querySelectorAll('.ft-link[data-doc]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var d = DOCS[b.dataset.doc];
+          document.getElementById('ftTitle').textContent = d.t;
+          document.getElementById('ftBody').innerHTML = d.b;
+          last = b; modal.hidden = false; document.body.style.overflow = 'hidden';
+          setTimeout(function () { modal.querySelector('.ft-sheet-head button').focus(); }, 30);
+        });
+      });
+      modal.querySelector('.ft-sheet-head button').addEventListener('click', close);
+      modal.addEventListener('click', function (e) { if (e.target === modal) close(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) close(); });
+    })();
+  </script>
+
+
+  <!-- 모두 지우기 확인 -->
+  <div class="modal" id="resetModal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="resetTitle">
+      <h3 id="resetTitle">내 정보를 모두 지울까요?</h3>
+      <p>이름, 월급, 정기지출, 알림 설정이 이 기기에서 지워지고 로그아웃돼요. 지운 정보는 되살릴 수 없어요.</p>
+      <div class="row-end">
+        <button type="button" class="btn btn-line" id="resetCancel">취소</button>
+        <button type="button" class="btn btn-red" id="resetOk">모두 지우기</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    (function () {
+      var KEYS = ['wolyeoyu-login', 'wolyeoyu-name', 'wolyeoyu-mail', 'wolyeoyu-setup'];
+      var DEFAULT = {
+        name: '김여유', salary: 2300000, payday: 25, saving: 600000,
+        fixed: [
+          { n: '월세', a: 500000, d: 10 }, { n: '교통비', a: 100000, d: 1 }, { n: '구독료', a: 40000, d: 21 },
+          { n: '통신비', a: 55000, d: 15 }, { n: '보험료', a: 85000, d: 27 }
+        ],
+        notify: { pay: true, daily: true, over: false, report: true }
+      };
+
+      /* ---------- 저장소 (막혀 있어도 화면은 그대로 동작) ---------- */
+      function get(k) { try { return localStorage.getItem(k) || sessionStorage.getItem(k); } catch (e) { return null; } }
+      function set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+      function del(k) { try { localStorage.removeItem(k); sessionStorage.removeItem(k); } catch (e) {} }
+
+      var setup = {};
+      try { setup = JSON.parse(get('wolyeoyu-setup') || '{}') || {}; } catch (e) { setup = {}; }
+      var me = {
+        name: get('wolyeoyu-name') || setup.name || DEFAULT.name,
+        mail: get('wolyeoyu-mail') || 'yeoyu@mail.com',
+        salary: setup.salary || DEFAULT.salary,
+        payday: setup.payday === 0 ? 0 : (setup.payday || DEFAULT.payday),
+        saving: typeof setup.saving === 'number' ? setup.saving : DEFAULT.saving,
+        fixed: setup.fixed && setup.fixed.length ? setup.fixed : DEFAULT.fixed,
+        notify: setup.notify || DEFAULT.notify,
+        createdAt: setup.createdAt || null
+      };
+      function saveSetup() {
+        setup.name = me.name; setup.salary = me.salary; setup.payday = me.payday; setup.saving = me.saving;
+        setup.fixed = me.fixed; setup.notify = me.notify; setup.daily = daily();
+        if (!setup.createdAt) setup.createdAt = me.createdAt || new Date().toISOString();
+        set('wolyeoyu-setup', JSON.stringify(setup));
+      }
+
+      var $ = function (id) { return document.getElementById(id); };
+      function num(s) { return parseInt(String(s).replace(/[^0-9]/g, ''), 10) || 0; }
+      function won(n) { return Math.round(n).toLocaleString('ko-KR') + '원'; }
+      function fixedSum() { return me.fixed.reduce(function (t, x) { return t + (x.a || 0); }, 0); }
+      function today() { var n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
+      function payDate(y, m, day) { var last = new Date(y, m + 1, 0).getDate(); return new Date(y, m, day === 0 ? last : Math.min(day, last)); }
+      function cycle(day) {
+        var t = today(), next = payDate(t.getFullYear(), t.getMonth(), day);
+        if (next <= t) next = payDate(t.getFullYear(), t.getMonth() + 1, day);
+        var prev = payDate(next.getFullYear(), next.getMonth() - 1, day);
+        return { left: Math.round((next - t) / 864e5), length: Math.max(1, Math.round((next - prev) / 864e5)) };
+      }
+      function daily(sal, sav, day) {
+        sal = sal == null ? me.salary : sal; sav = sav == null ? me.saving : sav; day = day == null ? me.payday : day;
+        return Math.max(0, Math.floor((sal - fixedSum() - sav) / cycle(day).length / 100) * 100);
+      }
+
+      /* ---------- 로그인 상태 ---------- */
+      var nav = document.querySelector('.nav');
+      var loggedIn = !!get('wolyeoyu-login');
+      nav.classList.add(loggedIn ? 'is-in' : 'is-out');
+      document.body.classList.toggle('is-guest', !loggedIn);
+
+      /* ---------- 왼쪽 요약 ---------- */
+      function renderMe() {
+        $('meAv').textContent = me.name.trim().charAt(0) || '나';
+        $('meName').textContent = me.name;
+        $('meMail').textContent = me.mail;
+        document.querySelectorAll('.pf-user').forEach(function (el) { el.textContent = me.name; });
+        document.querySelectorAll('.pf-mail').forEach(function (el) { el.textContent = me.mail; });
+        var days = me.createdAt ? Math.max(1, Math.floor((today() - new Date(me.createdAt)) / 864e5) + 1) : 1;
+        $('meSince').textContent = '월여유와 함께한 지 ' + days + '일째';
+        $('stDaily').textContent = won(daily());
+        var c = cycle(me.payday);
+        $('stDday').textContent = c.left === 0 ? '오늘!' : 'D-' + c.left;
+      }
+
+      /* ---------- 프로필 ---------- */
+      var inName = $('inName'), inMail = $('inMail'), pSave = $('profileSave');
+      inName.value = me.name; inMail.value = me.mail;
+      function profileDirty() {
+        pSave.disabled = inName.value.trim() === me.name && inMail.value.trim() === me.mail;
+      }
+      [inName, inMail].forEach(function (el) {
+        el.addEventListener('input', function () { el.closest('.f').classList.remove('err'); profileDirty(); });
+      });
+      $('profileForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var n = inName.value.trim(), m = inMail.value.trim();
+        var okN = !!n, okM = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m);
+        $('f-name').classList.toggle('err', !okN);
+        $('f-mail').classList.toggle('err', !okM);
+        if (!okN) return inName.focus();
+        if (!okM) return inMail.focus();
+        me.name = n; me.mail = m;
+        set('wolyeoyu-name', n); set('wolyeoyu-mail', m); saveSetup();
+        renderMe(); profileDirty(); showToast('프로필을 저장했어요');
+      });
+
+      /* ---------- 월급 정보 ---------- */
+      var inSalary = $('inSalary'), inSaving = $('inSaving'), inPayday = $('inPayday'), sSave = $('salarySave');
+      var opts = '';
+      for (var d = 1; d <= 31; d++) opts += '<option value="' + d + '">매달 ' + d + '일</option>';
+      opts += '<option value="0">매달 말일</option>';
+      inPayday.innerHTML = opts;
+      inSalary.value = me.salary.toLocaleString('ko-KR');
+      inSaving.value = me.saving ? me.saving.toLocaleString('ko-KR') : '';
+      inPayday.value = String(me.payday);
+
+      function salaryPreview() {
+        var sal = num(inSalary.value), sav = num(inSaving.value), day = +inPayday.value;
+        var free = sal - fixedSum();
+        $('cFree').textContent = won(Math.max(free, 0));
+        $('cLeft').textContent = won(Math.max(free - sav, 0));
+        $('cDaily').textContent = won(daily(sal, sav, day));
+        sSave.disabled = sal === me.salary && sav === me.saving && day === me.payday;
+      }
+      [inSalary, inSaving].forEach(function (el) {
+        el.addEventListener('input', function () {
+          var v = num(el.value); el.value = v ? v.toLocaleString('ko-KR') : '';
+          el.closest('.f').classList.remove('err'); salaryPreview();
+        });
+      });
+      inPayday.addEventListener('change', salaryPreview);
+      $('salaryForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var sal = num(inSalary.value), sav = num(inSaving.value);
+        var okS = sal > 0, okV = sav <= Math.max(sal - fixedSum(), 0);
+        $('f-salary').classList.toggle('err', !okS);
+        $('f-saving').classList.toggle('err', okS && !okV);
+        if (!okS) return inSalary.focus();
+        if (!okV) return inSaving.focus();
+        me.salary = sal; me.saving = sav; me.payday = +inPayday.value;
+        saveSetup(); renderMe(); salaryPreview(); showToast('월급 정보를 저장했어요');
+      });
+
+      /* ---------- 정기지출 요약 ---------- */
+      function renderFixed() {
+        var items = me.fixed.slice().sort(function (a, b) { return (a.d || 99) - (b.d || 99); });
+        $('fxList').innerHTML = '';
+        items.forEach(function (x) {
+          var li = document.createElement('li');
+          li.innerHTML = '<span class="d">' + (x.d ? '매달 ' + x.d + '일' : '날짜 미정') + '</span><span class="nm"></span><span class="am">' + won(x.a) + '</span>';
+          li.querySelector('.nm').textContent = x.n;
+          $('fxList').appendChild(li);
+        });
+        $('fxTotal').textContent = won(fixedSum());
+        $('fxDesc').textContent = '매달 정해진 날 빠져나가는 돈 ' + items.length + '개예요';
+      }
+
+      /* ---------- 알림 ---------- */
+      document.querySelectorAll('.switch input').forEach(function (cb) {
+        cb.checked = !!me.notify[cb.dataset.k];
+        cb.addEventListener('change', function () {
+          me.notify[cb.dataset.k] = cb.checked; saveSetup();
+          var label = cb.closest('.tg-row').querySelector('b').textContent;
+          var c = label.charCodeAt(label.length - 1), josa = (c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28) ? '을' : '를';
+          showToast(label + josa + (cb.checked ? ' 켰어요' : ' 껐어요'));
+        });
+      });
+
+      /* ---------- 계정 ---------- */
+      function logout() {
+        del('wolyeoyu-login');
+        nav.classList.remove('is-in'); nav.classList.add('is-out');
+        document.body.classList.add('is-guest');
+        window.scrollTo(0, 0);
+      }
+      $('logoutBtn').addEventListener('click', function () { logout(); showToast('로그아웃했어요'); });
+
+      var modal = $('resetModal');
+      function closeModal() { modal.hidden = true; $('resetBtn').focus(); }
+      $('resetBtn').addEventListener('click', function () { modal.hidden = false; setTimeout(function () { $('resetCancel').focus(); }, 30); });
+      $('resetCancel').addEventListener('click', closeModal);
+      modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+      $('resetOk').addEventListener('click', function () {
+        KEYS.forEach(del);
+        modal.hidden = true;
+        logout(); showToast('내 정보를 모두 지웠어요');
+      });
+
+      /* ---------- 상단 프로필 메뉴 ---------- */
+      var btn = document.querySelector('.profile'), menu = $('pfMenu');
+      function setOpen(v) { menu.hidden = !v; btn.setAttribute('aria-expanded', v ? 'true' : 'false'); }
+      btn.addEventListener('click', function () { setOpen(menu.hidden); });
+      document.addEventListener('click', function (e) {
+        if (!menu.hidden && !btn.contains(e.target) && !menu.contains(e.target)) setOpen(false);
+      }, true);
+      menu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { setOpen(false); }); });
+      menu.querySelector('.pf-out').addEventListener('click', function () { setOpen(false); logout(); showToast('로그아웃했어요'); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        if (!modal.hidden) closeModal(); else if (!menu.hidden) { setOpen(false); btn.focus(); }
+      });
+
+      /* ---------- 왼쪽 바로가기: 보고 있는 칸 표시 ---------- */
+      var links = document.querySelectorAll('.toc a');
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (es) {
+          es.forEach(function (en) {
+            if (!en.isIntersecting) return;
+            links.forEach(function (a) { a.classList.toggle('on', a.getAttribute('href') === '#' + en.target.id); });
+          });
+        }, { rootMargin: '-40% 0px -55% 0px' });
+        document.querySelectorAll('.sec').forEach(function (s) { io.observe(s); });
+      }
+
+      var tId;
+      function showToast(msg) {
+        var t = $('toast'); t.textContent = msg; t.classList.add('show');
+        clearTimeout(tId); tId = setTimeout(function () { t.classList.remove('show'); }, 1800);
+      }
+
+      renderMe(); salaryPreview(); renderFixed();
+    })();
+  </script>
+
+</body>
+</html>

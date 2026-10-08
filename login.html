@@ -9,227 +9,265 @@
     :root {
       --green: #4a968c;
       --green-dark: #2e7d72;
-      --green-mid: #88b8bb;
+      --green-deep: #1f5a52;
       --green-light: #dce8e5;
-      --bg: #f4f4f4;
-      --line: #e3e6e5;
+      --green-tint: #f3f8f7;
       --red: #d4574a;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { height: 100%; }
-    body { font-family: 'Pretendard', sans-serif; background: #fff; color: #141414; -webkit-font-smoothing: antialiased; }
+    body { font-family: 'Pretendard', sans-serif; background: #fff; color: #222; }
     a { text-decoration: none; color: inherit; }
     button { font-family: inherit; cursor: pointer; }
 
-    .page { min-height: 100%; background: #f6f8f7; }
+    .page { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); min-height: 100vh; }
 
-    /* ===== 로그인 ===== */
-    .side { display: flex; flex-direction: column; min-height: 100vh; padding: 32px 48px; }
-    .side-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; color: #888; }
-    .side-top a { font-weight: 700; color: var(--green-dark); }
-    .side-top a.m-logo { color: #141414; }
-    .form-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 0; }
-    .form { width: 100%; max-width: 440px; padding: 44px 40px 40px; background: #fff; border-radius: 28px;
-            box-shadow: 0 1px 2px rgba(0,0,0,.03), 0 24px 56px -20px rgba(20,60,55,.18); }
-    .form-logo { margin-bottom: 22px; }
-    .badge.lg svg { width: 20px; height: 48px; }
-    .form h2 { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
-    .form .sub { margin-top: 10px; font-size: 16px; color: #888; }
+    /* ===== 왼쪽: 소개 ===== */
+    .intro { position: relative; display: flex; flex-direction: column; padding: 44px 56px; overflow: hidden; color: #fff;
+             background: linear-gradient(150deg, #6cc0b2 0%, #4fae9f 45%, #3a9888 100%); }
+    .intro::before, .intro::after { content: ""; position: absolute; border-radius: 50%; pointer-events: none; }
+    .intro::before { right: -160px; top: -120px; width: 460px; height: 460px; background: rgba(255,255,255,.12); }
+    .intro::after { left: -120px; bottom: -200px; width: 420px; height: 420px; background: rgba(255,255,255,.08); }
+    .brand { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; letter-spacing: -.5px; }
+    .brand svg { width: 13px; height: 32px; }
+    .intro-main { position: relative; z-index: 1; margin: auto 0; text-align: left; }
+    .intro h1 { font-size: 52px; font-weight: 800; letter-spacing: -2.2px; line-height: 1.18; word-break: keep-all; text-shadow: 0 2px 18px rgba(20,80,70,.18); }
+    .intro p { margin-top: 18px; font-size: 17px; line-height: 1.6; color: rgba(255,255,255,.92); }
+    .intro-foot { position: relative; z-index: 1; font-size: 13px; color: rgba(255,255,255,.8); }
 
-    .field { margin-top: 28px; }
-    .field + .field { margin-top: 18px; }
-    .field label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: #444; }
-    .input { position: relative; }
-    .input input { width: 100%; height: 56px; padding: 0 18px; border: 1.5px solid var(--line); border-radius: 14px;
-                   background: #fff; font: inherit; font-size: 16px; color: #141414; outline: 0;
-                   transition: border-color .2s ease, box-shadow .2s ease; }
-    .input input::placeholder { color: #b5b5b5; }
-    .input input:focus { border-color: var(--green-dark); box-shadow: 0 0 0 4px rgba(46,125,114,.12); }
-    .field.error input { border-color: var(--red); box-shadow: 0 0 0 4px rgba(212,87,74,.1); }
-    .msg { display: none; margin-top: 8px; font-size: 13px; color: var(--red); }
-    .field.error .msg { display: block; }
-    .eye { position: absolute; top: 50%; right: 10px; transform: translateY(-50%); display: flex; align-items: center; justify-content: center;
-           width: 38px; height: 38px; border: 0; border-radius: 10px; background: none; color: #999; }
-    .eye:hover { background: #f3f5f4; color: var(--green-dark); }
-    .eye svg { width: 20px; height: 20px; }
-    .eye .off { display: none; }
-    .eye.on .on { display: none; }
-    .eye.on .off { display: block; }
+    /* ===== 오른쪽: 로그인 ===== */
+    .side { display: flex; flex-direction: column; padding: 32px 56px; }
+    .side-top { display: flex; justify-content: flex-end; gap: 8px; }
+    .side-top a { padding: 8px 12px; border-radius: 10px; font-size: 14px; color: #777; transition: background .2s ease, color .2s ease; }
+    .side-top a:hover { background: #f2f5f4; color: var(--green-dark); }
+    .form-wrap { width: 100%; max-width: 400px; margin: auto; padding: 40px 0; }
+    .form-wrap h2 { font-size: 30px; font-weight: 800; letter-spacing: -1px; color: #141414; }
+    .form-wrap > p { margin-top: 8px; font-size: 15px; color: #8a8f8d; }
 
-    .row { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; font-size: 14px; }
-    .check { display: inline-flex; align-items: center; gap: 8px; color: #555; cursor: pointer; user-select: none; }
-    .check input { width: 18px; height: 18px; accent-color: var(--green-dark); }
-    .row a { color: #888; }
-    .row a:hover { color: var(--green-dark); }
+    .f { margin-top: 22px; }
+    .f + .f { margin-top: 16px; }
+    .f label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: #444; }
+    .box { position: relative; }
+    .in { width: 100%; height: 54px; padding: 0 18px; border: 1.5px solid #e3e8e6; border-radius: 15px; outline: 0; background: #fff;
+          font: inherit; font-size: 16px; color: #141414; transition: border-color .2s ease, box-shadow .2s ease; }
+    .in::placeholder { color: #b5bab8; }
+    .in:focus { border-color: var(--green-dark); box-shadow: 0 0 0 4px rgba(46,125,114,.12); }
+    .in.pw { padding-right: 56px; }
+    .eye { position: absolute; top: 50%; right: 8px; transform: translateY(-50%); display: flex; align-items: center; justify-content: center;
+           width: 40px; height: 40px; border: 0; border-radius: 10px; background: none; color: #9aa09e; }
+    .eye:hover { background: #f2f5f4; color: var(--green-dark); }
+    .eye svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .f.err .in { border-color: var(--red); box-shadow: 0 0 0 4px rgba(212,87,74,.1); }
+    .msg { display: none; margin-top: 7px; font-size: 13px; color: var(--red); }
+    .f.err .msg { display: block; }
 
-    .submit { position: relative; width: 100%; height: 58px; margin-top: 28px; border: 0; border-radius: 14px;
-              background: #141414; color: #fff; font-size: 17px; font-weight: 700; transition: background .25s ease, transform .2s ease; }
+    .opts { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; font-size: 14px; }
+    .keep { display: inline-flex; align-items: center; gap: 8px; color: #555; cursor: pointer; user-select: none; }
+    .keep input { width: 18px; height: 18px; accent-color: var(--green-dark); cursor: pointer; }
+    .find { border: 0; background: none; font: inherit; font-size: 14px; color: #8a8f8d; }
+    .find:hover { color: var(--green-dark); text-decoration: underline; text-underline-offset: 3px; }
+
+    .submit { width: 100%; height: 56px; margin-top: 24px; border: 0; border-radius: 16px; background: #141414; color: #fff;
+              font-size: 16.5px; font-weight: 700; transition: background .2s ease; }
     .submit:hover { background: var(--green-dark); }
-    .submit:active { transform: scale(.99); }
-    .submit.loading { color: transparent; pointer-events: none; background: var(--green-dark); }
-    .submit.loading::after { content: ""; position: absolute; top: 50%; left: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px;
-                             border: 2.5px solid rgba(255,255,255,.35); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .submit:disabled { background: #2e7d72; cursor: default; }
 
-    .or { display: flex; align-items: center; gap: 14px; margin: 30px 0 18px; font-size: 13px; color: #aaa; }
-    .or::before, .or::after { content: ""; flex: 1; height: 1px; background: #ececec; }
-    .social { display: grid; gap: 10px; }
-    .social button { display: flex; align-items: center; justify-content: center; gap: 10px; height: 52px; border-radius: 14px; font-size: 15px; font-weight: 600; transition: filter .2s ease, border-color .2s ease; }
-    .social .kakao { border: 0; background: #fee500; color: #191919; }
-    .social .naver { border: 0; background: #03c75a; color: #fff; }
-    .social .apple { border: 1.5px solid var(--line); background: #fff; color: #141414; }
-    .social button:hover { filter: brightness(.96); }
-    .social .sns { width: 20px; height: 20px; object-fit: contain; }
-    .social .apple:hover { border-color: #c9cfcd; filter: none; }
+    .join { margin-top: 26px; padding-top: 22px; border-top: 1px solid #f0f2f1; text-align: center; font-size: 14.5px; color: #8a8f8d; }
+    .join a { margin-left: 4px; font-weight: 700; color: var(--green-dark); }
+    .join a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-    .foot { text-align: center; font-size: 12px; color: #aaa; }
-    .foot a { text-decoration: underline; }
+    /* 비밀번호 찾기 창 */
+    .modal { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: 16px;
+             background: rgba(15,30,28,.38); backdrop-filter: blur(3px); animation: fade .18s ease; }
+    .modal[hidden] { display: none; }
+    @keyframes fade { from { opacity: 0; } }
+    @keyframes up { from { opacity: 0; transform: translateY(14px) scale(.98); } }
+    .sheet { position: relative; width: 100%; max-width: 420px; padding: 30px 28px 24px; background: #fff; border-radius: 24px;
+             box-shadow: 0 40px 80px -20px rgba(0,0,0,.35); animation: up .22s cubic-bezier(.2,.7,.2,1); }
+    .sheet h3 { padding-right: 40px; font-size: 21px; font-weight: 800; letter-spacing: -.5px; color: #141414; }
+    .sheet > p { margin-top: 6px; font-size: 14.5px; line-height: 1.6; color: #8a8f8d; word-break: keep-all; }
+    .x { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border: 0; border-radius: 50%; background: #f5f7f6; color: #777; font-size: 22px; line-height: 1; }
+    .x:hover { background: #eaf1ef; color: var(--green-dark); }
+    .sheet .submit { height: 50px; margin-top: 18px; border-radius: 14px; font-size: 15.5px; }
 
-    /* 등장 애니메이션 */
-    .up { opacity: 0; transform: translateY(14px); animation: up .7s cubic-bezier(.2,.7,.2,1) forwards; }
-    @keyframes up { to { opacity: 1; transform: none; } }
+    .toast { position: fixed; left: 50%; bottom: 36px; z-index: 70; padding: 14px 22px; border-radius: 999px; background: #141414; color: #fff;
+             font-size: 15px; font-weight: 600; white-space: nowrap; transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+             transition: opacity .25s ease, transform .25s ease; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
-    @media (prefers-reduced-motion: reduce) {
-      .up { animation: none; opacity: 1; transform: none; }
-      .submit, .input input, .social button { transition: none; }
+    @media (max-width: 1000px) {
+      .intro { padding: 40px; }
+      .intro h1 { font-size: 40px; }
+      .side { padding: 28px 40px; }
     }
-
-    /* 로고 */
-    .m-logo { display: inline-flex; align-items: center; gap: 9px; font-size: 20px; font-weight: 800; letter-spacing: -.5px; color: #141414; }
-    .badge { display: flex; align-items: center; }
-    .badge svg { width: 13px; height: 32px; }
-
-    @media (max-width: 600px) {
-      .side { padding: 20px 16px; }
-      .page { background: #fff; }
-      .form { padding: 8px 4px 24px; box-shadow: none; border-radius: 0; }
+    @media (max-width: 820px) {
+      .page { grid-template-columns: 1fr; }
+      .intro { padding: 28px 24px 32px; }
+      .intro-main { margin-top: 36px; }
+      .intro h1 { font-size: 32px; letter-spacing: -1.2px; }
+      .intro-foot { display: none; }
+      .side { padding: 20px 20px 40px; }
+      .form-wrap { padding-top: 16px; }
     }
-    @media (max-width: 480px) {
-      .form h2 { font-size: 28px; }
-      .side-top .ask { display: none; }
-    }
+    @media (prefers-reduced-motion: reduce) { .modal, .sheet { animation: none; } }
   </style>
 </head>
 
 <body>
   <div class="page">
 
-    <!-- 로그인 -->
-    <main class="side">
+    <!-- 왼쪽: 소개 -->
+    <section class="intro">
+      <span class="brand">
+        <svg viewBox="0 0 14 34" aria-hidden="true"><circle cx="7" cy="7" r="7" fill="#e3f4f0"/><circle cx="7" cy="17" r="7" fill="#2e7d72"/><circle cx="7" cy="27" r="7" fill="#1f5a52"/></svg>
+        월여유
+      </span>
+      <div class="intro-main">
+        <h1>월급날까지,<br>오늘 쓸 돈만<br>보면 돼요</h1>
+        <p>복잡한 가계부 대신,<br>매일 확인할 숫자 하나만 알려 드려요.</p>
+      </div>
+      <p class="intro-foot">© <span id="year">2026</span> 월여유</p>
+    </section>
+
+    <!-- 오른쪽: 로그인 -->
+    <section class="side">
       <div class="side-top">
-        <a href="./about.html" class="m-logo">
-          <span class="badge"><svg viewBox="0 0 14 34" aria-hidden="true"><circle cx="7" cy="7" r="7" fill="#c4e3dd"/><circle cx="7" cy="17" r="7" fill="#6fb3aa"/><circle cx="7" cy="27" r="7" fill="#2e7d72"/></svg></span>
-          <span>월여유</span>
-        </a>
-        <span><span class="ask">처음이신가요?</span> <a href="#">회원가입</a></span>
+        <a href="./about.html?tour">소개 둘러보기</a>
+        <a href="./support.html?tour">고객센터</a>
       </div>
 
       <div class="form-wrap">
-        <form class="form" id="loginForm" novalidate>
-          <div class="form-logo up" style="animation-delay:.05s"><span class="badge lg"><svg viewBox="0 0 14 34" aria-hidden="true"><circle cx="7" cy="7" r="7" fill="#c4e3dd"/><circle cx="7" cy="17" r="7" fill="#6fb3aa"/><circle cx="7" cy="27" r="7" fill="#2e7d72"/></svg></span></div>
-          <h2 class="up" style="animation-delay:.1s">월여유에 다시 오셨네요</h2>
-          <p class="sub up" style="animation-delay:.15s">이메일과 비밀번호로 로그인해 주세요.</p>
+        <h2>다시 만나서 반가워요</h2>
+        <p>이메일로 로그인해 주세요</p>
 
-          <div class="field up" style="animation-delay:.2s" id="f-email">
-            <label for="email">이메일</label>
-            <div class="input"><input id="email" type="email" placeholder="example@email.com" autocomplete="email"></div>
-            <p class="msg">올바른 이메일 주소를 입력해 주세요.</p>
+        <form id="loginForm" novalidate>
+          <div class="f" id="f-mail">
+            <label for="mail">이메일</label>
+            <input class="in" id="mail" type="email" placeholder="yeoyu@mail.com" autocomplete="email" maxlength="60">
+            <p class="msg">이메일 형식을 확인해 주세요.</p>
           </div>
-
-          <div class="field up" style="animation-delay:.25s" id="f-pw">
+          <div class="f" id="f-pw">
             <label for="pw">비밀번호</label>
-            <div class="input">
-              <input id="pw" type="password" placeholder="비밀번호 입력" autocomplete="current-password">
-              <button type="button" class="eye" aria-label="비밀번호 보기">
-                <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
-                <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a9.9 9.9 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+            <div class="box">
+              <input class="in pw" id="pw" type="password" placeholder="비밀번호" autocomplete="current-password" maxlength="40">
+              <button type="button" class="eye" id="eye" aria-label="비밀번호 보기" aria-pressed="false">
+                <svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
               </button>
             </div>
-            <p class="msg">비밀번호는 8자 이상 입력해 주세요.</p>
+            <p class="msg">비밀번호를 4자 이상 입력해 주세요.</p>
           </div>
 
-          <div class="row up" style="animation-delay:.3s">
-            <label class="check"><input type="checkbox" checked> 로그인 상태 유지</label>
-            <a href="#">비밀번호 찾기</a>
+          <div class="opts">
+            <label class="keep"><input type="checkbox" id="keep" checked>로그인 유지</label>
+            <button type="button" class="find" id="findBtn">비밀번호 찾기</button>
           </div>
 
-          <button type="submit" class="submit up" style="animation-delay:.35s">로그인</button>
-
-          <div class="or up" style="animation-delay:.4s">또는</div>
-          <div class="social up" style="animation-delay:.45s">
-            <button type="button" class="kakao"><img class="sns" src="./img/kakao-symbol.png" alt="" onerror="this.remove()">카카오로 계속하기</button>
-            <button type="button" class="naver"><img class="sns" src="./img/naver-symbol.png" alt="" onerror="this.remove()">네이버로 계속하기</button>
-            <button type="button" class="apple">Apple로 계속하기</button>
-          </div>
+          <button type="submit" class="submit" id="submitBtn">로그인</button>
         </form>
+
+        <p class="join">처음이신가요?<a href="./onboarding.html">시작하기</a></p>
       </div>
-
-      <p class="foot">로그인하면 <a href="#">이용약관</a> 및 <a href="#">개인정보 처리방침</a>에 동의하게 돼요.</p>
-    </main>
-
+    </section>
   </div>
+
+  <!-- 비밀번호 찾기 -->
+  <div class="modal" id="findModal" hidden>
+    <form class="sheet" id="findForm" role="dialog" aria-modal="true" aria-labelledby="findTitle" novalidate>
+      <button type="button" class="x" aria-label="닫기">×</button>
+      <h3 id="findTitle">비밀번호를 잊으셨나요?</h3>
+      <p>가입한 이메일을 적어 주시면 비밀번호를 다시 정할 수 있는 링크를 보내 드려요.</p>
+      <div class="f" id="f-find">
+        <label for="findMail">이메일</label>
+        <input class="in" id="findMail" type="email" placeholder="yeoyu@mail.com" autocomplete="email">
+        <p class="msg">이메일 형식을 확인해 주세요.</p>
+      </div>
+      <button type="submit" class="submit">링크 보내기</button>
+    </form>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
 
   <script>
     (function () {
-      var form = document.getElementById('loginForm');
-      var email = document.getElementById('email');
-      var pw = document.getElementById('pw');
-      var eye = document.querySelector('.eye');
-      var submit = form.querySelector('.submit');
+      var $ = function (id) { return document.getElementById(id); };
+      var MAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      function get(k) { try { return localStorage.getItem(k) || sessionStorage.getItem(k); } catch (e) { return null; } }
+
+      $('year').textContent = new Date().getFullYear();
+
+      /* 전에 쓴 이메일이 있으면 미리 채워 두기 */
+      var saved = get('wolyeoyu-mail');
+      if (saved) $('mail').value = saved;
+      setTimeout(function () { (saved ? $('pw') : $('mail')).focus(); }, 60);
 
       /* 비밀번호 보기 / 숨기기 */
-      eye.addEventListener('click', function () {
-        var show = pw.type === 'password';
-        pw.type = show ? 'text' : 'password';
-        eye.classList.toggle('on', show);
-        eye.setAttribute('aria-label', show ? '비밀번호 숨기기' : '비밀번호 보기');
+      $('eye').addEventListener('click', function () {
+        var show = $('pw').type === 'password';
+        $('pw').type = show ? 'text' : 'password';
+        this.setAttribute('aria-pressed', show ? 'true' : 'false');
+        this.setAttribute('aria-label', show ? '비밀번호 숨기기' : '비밀번호 보기');
+        $('pw').focus();
       });
 
-      /* 입력 검사 */
-      function check() {
-        var okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
-        var okPw = pw.value.length >= 8;
-        document.getElementById('f-email').classList.toggle('error', !okEmail);
-        document.getElementById('f-pw').classList.toggle('error', !okPw);
-        return okEmail && okPw;
-      }
-      [email, pw].forEach(function (el) {
-        el.addEventListener('input', function () { el.closest('.field').classList.remove('error'); });
+      ['mail', 'pw'].forEach(function (id) {
+        $(id).addEventListener('input', function () { this.closest('.f').classList.remove('err'); });
       });
 
-      /* 로그인 처리 → 성공하면 홈으로 자동 이동 */
-      var KEY = 'wolyeoyu-login';
-      var keep = form.querySelector('.check input');
-      function saveLogin() {
-        try {
-          var store = keep.checked ? localStorage : sessionStorage;
-          store.setItem(KEY, JSON.stringify({ email: email.value.trim(), at: Date.now() }));
-        } catch (err) { /* 저장이 막힌 브라우저에서도 이동은 그대로 */ }
-      }
-      function goHome() { location.replace('./home.html'); }
-
-      form.addEventListener('submit', function (e) {
+      /* 로그인 (서버가 없어서 이 기기에 로그인 상태만 저장해요) */
+      $('loginForm').addEventListener('submit', function (e) {
         e.preventDefault();
-        if (!check()) { (document.querySelector('.field.error input') || email).focus(); return; }
-        submit.classList.add('loading');
-        saveLogin();
-        setTimeout(goHome, 900);
+        var mail = $('mail').value.trim(), pw = $('pw').value;
+        var okM = MAIL_RE.test(mail), okP = pw.length >= 4;
+        $('f-mail').classList.toggle('err', !okM);
+        $('f-pw').classList.toggle('err', !okP);
+        if (!okM) return $('mail').focus();
+        if (!okP) return $('pw').focus();
+
+        var keep = $('keep').checked;
+        try {
+          var store = keep ? localStorage : sessionStorage;
+          var other = keep ? sessionStorage : localStorage;
+          other.removeItem('wolyeoyu-login');
+          store.setItem('wolyeoyu-login', '1');
+          localStorage.setItem('wolyeoyu-mail', mail);
+          if (!get('wolyeoyu-name')) localStorage.setItem('wolyeoyu-name', mail.split('@')[0]);
+        } catch (err) {}
+
+        var btn = $('submitBtn');
+        btn.disabled = true; btn.textContent = '로그인했어요';
+        /* 처음 설정을 아직 안 했으면 시작하기로, 했으면 홈으로 */
+        var next = get('wolyeoyu-setup') ? './home.html' : './onboarding.html';
+        setTimeout(function () { location.href = next; }, 600);
       });
 
-      /* 간편 로그인 (데모) */
-      document.querySelectorAll('.social button').forEach(function (b) {
-        b.addEventListener('click', function () {
-          b.style.opacity = '.7';
-          try { localStorage.setItem(KEY, JSON.stringify({ email: b.className, at: Date.now() })); } catch (err) {}
-          setTimeout(goHome, 600);
-        });
+      /* 비밀번호 찾기 */
+      var modal = $('findModal');
+      function openFind() {
+        $('findMail').value = $('mail').value.trim();
+        $('f-find').classList.remove('err');
+        modal.hidden = false;
+        setTimeout(function () { $('findMail').focus(); }, 40);
+      }
+      function closeFind() { modal.hidden = true; $('findBtn').focus(); }
+      $('findBtn').addEventListener('click', openFind);
+      modal.querySelector('.x').addEventListener('click', closeFind);
+      modal.addEventListener('click', function (e) { if (e.target === modal) closeFind(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) closeFind(); });
+      $('findMail').addEventListener('input', function () { $('f-find').classList.remove('err'); });
+      $('findForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var m = $('findMail').value.trim();
+        if (!MAIL_RE.test(m)) { $('f-find').classList.add('err'); return $('findMail').focus(); }
+        closeFind();
+        showToast(m + '로 링크를 보냈어요');
       });
 
-      /* 이미 로그인한 상태로 이 페이지에 오면 바로 홈으로 */
-      try {
-        if (localStorage.getItem(KEY) || sessionStorage.getItem(KEY)) goHome();
-      } catch (err) {}
+      var tId;
+      function showToast(msg) {
+        var t = $('toast'); t.textContent = msg; t.classList.add('show');
+        clearTimeout(tId); tId = setTimeout(function () { t.classList.remove('show'); }, 2000);
+      }
     })();
   </script>
 </body>
