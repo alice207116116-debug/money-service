@@ -1,0 +1,115 @@
+:root {
+  --bg: #fff;   
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #ededed;
+  font-family: Arial, "Noto Sans KR", sans-serif;
+}
+
+/* 화면 한 장에 딱 맞게 */
+.main {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* 로고 */
+.logo {
+  position: absolute;
+  top: 3vh;
+  left: 5vw;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  font-size: min(4vh, 6vw);
+}
+
+.logo h1 {
+  color: #225e59;
+  font-size: 0.9em;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+}
+
+.logo-symbol {
+  position: relative;
+  width: 0.85em;
+  height: 1.4em;
+}
+
+.logo-symbol span {
+  position: absolute;
+  width: 0.85em;
+  height: 0.85em;
+  border-radius: 50%;
+}
+
+.logo-symbol span:nth-child(1) { top: 0;      background: #9de5e2; }
+.logo-symbol span:nth-child(2) { top: 0.3em;  background: #75c8c1; }
+.logo-symbol span:nth-child(3) { top: 0.6em;  background: #5eaaa3; }
+
+/* 메인 문구 */
+.hero {
+  position: relative;
+  z-index: 1;
+  padding-top: 13vh;
+  text-align: center;
+}
+
+.sub-title {
+  color: #707070;
+  font-size: min(5.6vh, 8.5vw);
+  font-weight: 600;
+  letter-spacing: -0.08em;
+}
+
+/* 초록색 문구 */
+.hero h2 {
+  display: inline-block;
+  margin-top: 1.2vh;
+  padding: 0.05em 0.35em 0.15em;
+  background: #68b5af;
+  color: #fff;
+  font-size: min(8vh, 12vw);
+  font-weight: 1000;
+  letter-spacing: -0.08em;
+}
+
+/* 버튼 */
+.check-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(38vh, 72vw);
+  height: min(8vh, 15vw);
+  margin: 4.5vh auto 0;
+  background: #246c66;
+  border-radius: 999px;
+  color: #fff;
+  text-decoration: none;
+  font-size: min(3.4vh, 6vw);
+  font-weight: 700;
+  letter-spacing: -0.06em;
+}
+
+/* 하단 이미지: 화면 아래에 붙여서 가운데 */
+.visual {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100vw, 80vh);
+  max-height: 50vh;
+  object-fit: contain;
+  object-position: bottom;
+}

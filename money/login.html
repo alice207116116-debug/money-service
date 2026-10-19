@@ -192,6 +192,7 @@
 
   <div class="toast" id="toast" role="status"></div>
 
+  <script src="./js/api.js"></script>
   <script>
     (function () {
       var $ = function (id) { return document.getElementById(id); };
@@ -218,7 +219,7 @@
         $(id).addEventListener('input', function () { this.closest('.f').classList.remove('err'); });
       });
 
-      /* 로그인 (서버가 없어서 이 기기에 로그인 상태만 저장해요) */
+      /* 로그인 → Supabase Auth + 서버 API */
       $('loginForm').addEventListener('submit', function (e) {
         e.preventDefault();
         var mail = $('mail').value.trim(), pw = $('pw').value;
@@ -229,20 +230,49 @@
         if (!okP) return $('pw').focus();
 
         var keep = $('keep').checked;
-        try {
-          var store = keep ? localStorage : sessionStorage;
-          var other = keep ? sessionStorage : localStorage;
-          other.removeItem('wolyeoyu-login');
-          store.setItem('wolyeoyu-login', '1');
-          localStorage.setItem('wolyeoyu-mail', mail);
-          if (!get('wolyeoyu-name')) localStorage.setItem('wolyeoyu-name', mail.split('@')[0]);
-        } catch (err) {}
-
         var btn = $('submitBtn');
-        btn.disabled = true; btn.textContent = '로그인했어요';
-        /* 처음 설정을 아직 안 했으면 시작하기로, 했으면 홈으로 */
-        var next = get('wolyeoyu-setup') ? './home.html' : './onboarding.html';
-        setTimeout(function () { location.href = next; }, 600);
+        btn.disabled = true; btn.textContent = '로그인 중…';
+
+        WY.post('/auth/login', { email: mail, password: pw })
+          .then(function (data) {
+            WY.setToken(data.access_token, keep);
+            try {
+              localStorage.setItem('wolyeoyu-mail', mail);
+              if (!get('wolyeoyu-name')) localStorage.setItem('wolyeoyu-name', mail.split('@')[0]);
+            } catch (err) {}
+            return WY.get('/profile');
+          })
+          .then(function (profile) {
+            /* 로그인 상태 표시 (기존 화면 공통 키) */
+            try { localStorage.setItem('wolyeoyu-login', '1'); } catch (err) {}
+
+            var done = !!(profile && profile.setup_completed_at);
+            if (done) {
+              try {
+                localStorage.setItem('wolyeoyu-name', profile.name || mail.split('@')[0]);
+                localStorage.setItem('wolyeoyu-setup', JSON.stringify({
+                  name: profile.name,
+                  salary: profile.salary,
+                  payday: profile.payday,
+                  saving: profile.saving_goal,
+                  daily: profile.daily_budget,
+                  notify: {
+                    pay: profile.notify_pay, daily: profile.notify_daily,
+                    over: profile.notify_over, report: profile.notify_report
+                  }
+                }));
+              } catch (err) {}
+            }
+            btn.textContent = '로그인했어요';
+            /* 처음 설정을 아직 안 했으면 시작하기로, 했으면 홈으로 */
+            setTimeout(function () { location.href = done ? './home.html' : './onboarding.html'; }, 500);
+          })
+          .catch(function (err) {
+            btn.disabled = false; btn.textContent = '로그인';
+            $('f-pw').classList.add('err');
+            $('pw').focus();
+            showToast(err.message);
+          });
       });
 
       /* 비밀번호 찾기 */
@@ -263,8 +293,12 @@
         e.preventDefault();
         var m = $('findMail').value.trim();
         if (!MAIL_RE.test(m)) { $('f-find').classList.add('err'); return $('findMail').focus(); }
-        closeFind();
-        showToast(m + '로 링크를 보냈어요');
+        WY.post('/auth/reset-password', { email: m })
+          .then(function () {
+            closeFind();
+            showToast(m + '로 링크를 보냈어요');
+          })
+          .catch(function (err) { showToast(err.message); });
       });
 
       var tId;
